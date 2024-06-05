@@ -35,6 +35,15 @@
 #define PROS_USE_LITERALS
 
 #include "api.h"
+#include "robot-config.h"
+#include "z_autons/mogo_auton.h"
+#include "z_autons/ring_auton.h"
+#include "z_autons/skills_auton.h"
+#include "z_random_stuff/classes.h"
+#include "z_random_stuff/functions.h"
+#include "z_random_stuff/logo.h"
+#include "z_random_stuff/led.h"
+#include "z_random_stuff/field_screens.h"
 
 /**
  * You should add more #includes here
@@ -49,7 +58,7 @@
  * concurrently! The okapi namespace will export all symbols inside the pros
  * namespace.
  */
-// using namespace pros;
+using namespace pros;
 // using namespace pros::literals;
 // using namespace okapi;
 
