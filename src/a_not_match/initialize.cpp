@@ -32,7 +32,6 @@ int auton_value = 0;
 int color_value = 0;
 
 void competition_initialize() {
-
 }
 
 /**

@@ -3,7 +3,7 @@ using namespace pros;
 //good practice, however, it is what VEXCode uses, and
 //many other teams using PROS use extern as well
 
-extern Controller Con1;
+extern pros::Controller Con1;
 
 //Motors
 extern Motor FL;

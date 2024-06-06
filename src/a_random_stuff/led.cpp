@@ -80,7 +80,7 @@ void MyLED::rotate(int pixels){
             this->color_buffer[new_index] = tmp_buffer[i];
         }
 
-        delete tmp_buffer;
+        delete[] tmp_buffer;
     }
 }
 

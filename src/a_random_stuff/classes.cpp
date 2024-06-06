@@ -130,8 +130,8 @@ void DrivePID::move(double distance, double kp_opt, double ki_opt, double kd_opt
 		pros::Task::delay_until(&sleep_time, iteration_time);
 
         //Error is what kp ends up affecting
-        double error_l = revolutions - track_left.get_position()/3600;
-        double error_r = revolutions - track_right.get_position()/3600;
+        double error_l = revolutions - track_left.get_position()/3600.0;
+        double error_r = revolutions - track_right.get_position()/3600.0;
 
         //Integral is what ki ends up affecting
         double integral_l = integral_prior+error_l*iteration_time;
@@ -210,7 +210,7 @@ void DrivePID::strafe(double distance, double kp_opt, double ki_opt, double kd_o
 		pros::Task::delay_until(&sleep_time, iteration_time);
 
         //Error is what kp ends up affecting
-        double error = revolutions - track_back.get_position()/3600;
+        double error = revolutions - track_back.get_position()/3600.0;
 
         //Integral is what ki ends up affecting
         double integral = integral_prior+error*iteration_time;
@@ -279,9 +279,9 @@ void DrivePID::turn_wheels(double revolutions, double kp_opt, double ki_opt, dou
 		pros::Task::delay_until(&sleep_time, iteration_time);
 
         //Error is what kp ends up affecting
-        double error_l = revolutions - track_left.get_position()/3600;
+        double error_l = revolutions - track_left.get_position()/3600.0;
         //revolutions in error_r is made negative so the robot turns
-        double error_r = -revolutions - track_right.get_position()/3600;
+        double error_r = -revolutions - track_right.get_position()/3600.0;
 
         //Integral is what ki ends up affecting
         double integral_l = integral_prior+error_l*iteration_time;
@@ -387,7 +387,7 @@ std::string SmartCon::get_time(){
         this->raw_ticks = 0;
     }
     this->return_sec = floor((this->total_time-this->raw_sec)%60);
-    this->return_min = 1-floor(this->raw_sec/60);
+    this->return_min = 1-floor(this->raw_sec/60.0);
     return std::to_string(this->return_min)+":"+std::to_string(this->return_sec);
 }
 
@@ -423,7 +423,7 @@ ScreenButton::ScreenButton(int x, int y, int length, int height, int color, bool
     this->length=length;
     this->height=height;
     this->color=color;
-    this->toggle=toggle;
+    this->toggle=toggled;
     this->enable=false;
 }
 

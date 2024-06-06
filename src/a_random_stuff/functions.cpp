@@ -1,7 +1,7 @@
 #include "main.h"
 int joystick_math(int joystick_value, int deadzone){
-    if (fabs(joystick_value)>deadzone){
-         return round((1/127)*joystick_value*fabs(joystick_value));
+    if (std::abs(joystick_value)>deadzone){
+         return round((1.0/127)*joystick_value*std::abs(joystick_value));
     } 
     return 0;
 }
