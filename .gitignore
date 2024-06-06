@@ -1,12 +1,12 @@
-# Compiled Object files
+#Compiled Object files
 *.o
 *.obj
 
-# Executables
+#Executables
 *.bin
 *.elf
 
-# PROS
+#PROS
 bin/
 .vscode/
 .cache/
