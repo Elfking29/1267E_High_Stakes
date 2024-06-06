@@ -37,3 +37,5 @@ IMU inertial (11);
 //Auton Stuff
 adi::Potentiometer selector (1,E_ADI_POT_EDR);
 adi::DigitalIn changer (2);
+
+PneumaticsWrapper hello(1,22);

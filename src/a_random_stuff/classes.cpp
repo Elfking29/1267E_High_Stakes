@@ -1,5 +1,5 @@
 #include "main.h"
-
+//All classes need to be defined & externed in this and the .h file
 //Use multiple inertial sensors
 MultiIMU::MultiIMU(int port_one, int port_two, int port_three):
     imu_one (port_one),
