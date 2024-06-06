@@ -17,14 +17,14 @@ Controller Con1 (CONTROLLER_MASTER);
 Port Number (Negative for reverse)
 MOTOR_GEAR_{100/200/600}
 */
-Motor FL (1,MOTOR_GEAR_600);
-Motor BL (3,MOTOR_GEAR_600);
+Motor FL (1,v5::MotorGears::blue);
+Motor BL (3,v5::MotorGears::blue);
 
-Motor FR (4,MOTOR_GEAR_600);
-Motor BR (5,MOTOR_GEAR_600);
+Motor FR (4,v5::MotorGears::blue);
+Motor BR (5,v5::MotorGears::blue);
 
-Motor ML (2,MOTOR_GEAR_600);
-Motor MR (6,MOTOR_GEAR_600);
+Motor ML (2,v5::MotorGears::blue);
+Motor MR (6,v5::MotorGears::blue);
 
 //Tracking Wheels
 Rotation track_left(18);
@@ -35,8 +35,5 @@ Rotation track_back(20);
 IMU inertial (11);
 
 //Auton Stuff
-ADIPotentiometer selector (1,E_ADI_POT_EDR);
-ADIDigitalIn changer (2);
-
-//Light Strip
-
+adi::Potentiometer selector (1,E_ADI_POT_EDR);
+adi::DigitalIn changer (2);

@@ -1,4 +1,5 @@
 #include "main.h"
+#include <cstring>
 
 MyLED::MyLED(int adi_port,int strip_length,int smart_port):
     lightstrip ({smart_port,adi_port},strip_length)

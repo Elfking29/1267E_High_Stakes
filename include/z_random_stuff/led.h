@@ -14,7 +14,7 @@ class MyLED{
             int b;
         } rgb;
 
-        pros::ADILed lightstrip;
+        pros::adi::Led lightstrip;
 
     public:
         MyLED(int adi_port, int strip_length, int smart_port = 22);

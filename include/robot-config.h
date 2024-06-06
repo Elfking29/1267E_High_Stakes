@@ -24,8 +24,8 @@ extern Rotation track_back;
 extern IMU inertial;
 
 //Auton Stuff
-extern ADIPotentiometer selector;
-extern ADIDigitalIn changer;
+extern adi::Potentiometer selector;
+extern adi::DigitalIn changer;
 
 //Light Strip
 
