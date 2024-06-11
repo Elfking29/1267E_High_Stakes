@@ -32,4 +32,5 @@ extern adi::DigitalIn changer;
 //Define global variables here
 extern int color_value;
 extern int auton_value;
+extern double robot_angle;
 

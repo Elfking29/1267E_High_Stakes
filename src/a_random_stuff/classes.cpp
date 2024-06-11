@@ -89,22 +89,18 @@ void MultiIMU::set_rotation(int rotation){
 }
 
 //Drivetrain PID
-DrivePID::DrivePID(double kp_fb,double ki_fb,double kd_fb, double kp_tu_w,double ki_tu_w,double kd_tu_w, double kp_st,double ki_st,double kd_st,double ks_st, double iteration_time){
+DrivePID::DrivePID(double kp_fb,double ki_fb,double kd_fb, double kp_tu,double ki_tu,double kd_tu, double iteration_time){
     this->kp_fb = kp_fb;
     this->ki_fb = ki_fb;
     this->kd_fb = kd_fb;
 
-    this->kp_tu_w = kp_tu_w;
-    this->ki_tu_w = ki_tu_w;
-    this->kd_tu_w = kd_tu_w;
+    this->kp_tu = kp_tu;
+    this->ki_tu = ki_tu;
+    this->kd_tu = kd_tu;
 
-    this->kp_st = kp_st;
-    this->ki_st = ki_st;
-    this->kd_st = kd_st;
-    this->ks_st = ks_st;
 }
 
-void DrivePID::move(double distance, double kp_opt, double ki_opt, double kd_opt){
+void DrivePID::move(double distance, bool rev, double kp_opt, double ki_opt, double kd_opt){
     //These three values may not be needed, but can be tweaked
     double error_prior = 0;
     double integral_prior = 0;
@@ -119,15 +115,21 @@ void DrivePID::move(double distance, double kp_opt, double ki_opt, double kd_opt
     double integral_stop = 0.1;
     double breakvalue = 0.05; //Change
     bool break_check = false;
-    double revolutions = 3.141592*3.25*distance; 
-    //(pi/tracking_wheel_diameter) = inches_per_rev
-    //inches_per_rev*distance_in_inches = revolutions needed
+    double revolutions;
+    if (rev){
+        revolutions = distance;
+    }
+    else {
+        revolutions = 3.141592*3.25*distance; 
+        //(pi/tracking_wheel_diameter) = inches_per_rev
+        //inches_per_rev*distance_in_inches = revolutions needed
+    }
     track_left.reset_position();
     track_right.reset_position();
     uint32_t sleep_time = millis();
 
     while (not break_check){
-		pros::Task::delay_until(&sleep_time, iteration_time);
+		pros::Task::delay_until(&sleep_time, this->iteration_time);
 
         //Error is what kp ends up affecting
         double error_l = revolutions - track_left.get_position()/3600.0;
@@ -159,7 +161,7 @@ void DrivePID::move(double distance, double kp_opt, double ki_opt, double kd_opt
         double output_r = 1.27*kp*error_r+ki*integral_r+kd*derivative_r+bias;
 
         //This sets the output of the motors
-        move_drive_motors(output_l,output_l,output_r,output_r,output_l,output_r);
+        move_drive_motors(output_l, output_r);
 
         //This checks if power values are in tolerence
         //If they are, then break out of the loop
@@ -175,87 +177,8 @@ void DrivePID::move(double distance, double kp_opt, double ki_opt, double kd_opt
     brake_drive();
 }
 
-void DrivePID::strafe(double distance, double kp_opt, double ki_opt, double kd_opt, double ks_opt){
-    //These three values may not be needed, but can be tweaked
-    double error_prior = 0;
-    double integral_prior = 0;
-    double bias = 0;
-
-    //These three if statements check if any custom
-    //values have been passed into the function
-    double kp = (kp_opt == 1267) ? this->kp_st:kp_opt;
-    double ki = (ki_opt == 1267) ? this->ki_st:ki_opt;
-    double kd = (kd_opt == 1267) ? this->kd_st:kd_opt;
-    double ks = (ks_opt == 1267) ? this->ks_st:ks_opt;
-
-    double integral_stop = 0.1;
-    double breakvalue = 0.05; //Change
-    bool break_check = false;
-    double revolutions = 3.141592*3.25*distance; 
-    //(pi/tracking_wheel_diameter) = inches_per_rev
-    //inches_per_rev*distance_in_inches = revolutions needed
-    track_back.reset_position();
-    double pre_heading = inertial.get_rotation();
-    uint32_t sleep_time = millis();
-
-    //We want the middle wheels to hold, for they 
-    //Will not move and thus mitigate drift
-    ML.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-    MR.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-
-    ML.brake();
-    MR.brake();
-
-    while (not break_check){
-		pros::Task::delay_until(&sleep_time, iteration_time);
-
-        //Error is what kp ends up affecting
-        double error = revolutions - track_back.get_position()/3600.0;
-
-        //Integral is what ki ends up affecting
-        double integral = integral_prior+error*iteration_time;
-        //This  if statement makes the integral 0 if the error
-        //is really close to 0
-        if (error >= -integral_stop and error <= integral_stop){
-            integral = 0;
-        }
-
-        //Derivative is what kd ends up affecting
-        double derivative = (error-error_prior)/iteration_time;
-
-        //ks is a fourth constant designed to help with drift
-        //It may not be very necessary due to the middle wheels
-        //being in hold mode, but it could still help
-        double side_error = inertial.get_rotation() - pre_heading;
-        //This error is negative for the front and positive for the back
-
-        //This determines what the output should be to the motors
-        //The 1.27 converts the out of 100 value into a value out of 127
-        int output_f = 1.27*kp*error+ki*integral+kd*derivative-ks*side_error+bias;
-        int output_b = 1.27*kp*error+ki*integral+kd*derivative+ks*side_error+bias;
-
-        //This sets the output of the motors
-        move_drive_motors(output_f,-output_b,-output_f,output_b,1267,1267);
-        //This checks if power values are in tolerence
-        //If they are, then break out of the loop
-        if (error > -breakvalue and error < breakvalue){
-            break_check = true;
-        }
-    }
-    //This holds the motors, keeping their position
-    brake_drive(1);
-    //It then sets them to coast after a small delay
-    //So they can go do other things
-    delay(50);
-    brake_drive();
-}
-
-void DrivePID::turn_wheels(double revolutions, double kp_opt, double ki_opt, double kd_opt){
-    //This function is very similar to the move function.
-    //It just has one value made negative
-    //so that the robot turns.
-    //Usually, I would want to use one based on the inertial
-    //instead, but it is simple to code and nice to have.
+void DrivePID::turn(double distance, bool rev, double kp_opt, double ki_opt, double kd_opt){
+    //Turns using tracking wheels
 
     //These three values may not be needed, but can be tweaked
     double error_prior = 0;
@@ -264,19 +187,31 @@ void DrivePID::turn_wheels(double revolutions, double kp_opt, double ki_opt, dou
 
     //These three if statements check if any custom
     //values have been passed into the function
-    double kp = (kp_opt == 1267) ? this->kp_tu_w:kp_opt;
-    double ki = (ki_opt == 1267) ? this->ki_tu_w:ki_opt;
-    double kd = (kd_opt == 1267) ? this->kd_tu_w:kd_opt;
+    double kp = (kp_opt == 1267) ? this->kp_tu:kp_opt;
+    double ki = (ki_opt == 1267) ? this->ki_tu:ki_opt;
+    double kd = (kd_opt == 1267) ? this->kd_tu:kd_opt;
 
     double integral_stop = 0.1;
     double breakvalue = 0.05; //Change
     bool break_check = false;
+
+    //Convert angle to rev. Requires previous math
+    double deg_to_rev = 0; //MUST BE CHANGED
+    double revolutions;
+    if (rev){
+        revolutions = distance;
+    }
+    else {
+        revolutions = distance*deg_to_rev;
+    }
+    
+
     track_left.reset_position();
     track_right.reset_position();
     uint32_t sleep_time = millis();
 
     while (not break_check){
-		pros::Task::delay_until(&sleep_time, iteration_time);
+		pros::Task::delay_until(&sleep_time, this->iteration_time);
 
         //Error is what kp ends up affecting
         double error_l = revolutions - track_left.get_position()/3600.0;
@@ -309,7 +244,7 @@ void DrivePID::turn_wheels(double revolutions, double kp_opt, double ki_opt, dou
         double output_r = 1.27*kp*error_r+ki*integral_r+kd*derivative_r+bias;
 
         //This sets the output of the motors
-        move_drive_motors(output_l,output_l,output_r,output_r,output_l,output_r);
+        move_drive_motors(output_l, output_r);
 
         //This checks if power values are in tolerence
         //If they are, then break out of the loop
@@ -323,7 +258,6 @@ void DrivePID::turn_wheels(double revolutions, double kp_opt, double ki_opt, dou
     //So they can go do other things
     delay(50);
     brake_drive();
-
 }
 
 //Smart Controller Printing

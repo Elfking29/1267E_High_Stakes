@@ -39,17 +39,11 @@ void opcontrol() {
 		left_y = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_LEFT_Y),15);
 		left_x = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_LEFT_X),15);
 		right_x = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_RIGHT_X),15);
-		int FL_value = left_y+left_x+right_x;
-		int BL_value = left_y+left_x-right_x;
+		int L_value = left_y+left_x+right_x;
 
-		int FR_value = left_y-left_x-right_x;
-		int BR_value = left_y-left_x+right_x;
-		
-		//We don't want the center wheels going when strafeing
-		int ML_value = left_y+left_x;
-		int MR_value = left_y-left_x;
+		int R_value = left_y-left_x-right_x;
 
-		move_drive_motors(FL_value,BL_value,FR_value,BR_value,ML_value,MR_value);
+		move_drive_motors(L_value,R_value);
 
 		//End Drivetrain
 

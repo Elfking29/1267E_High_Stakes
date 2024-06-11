@@ -6,22 +6,15 @@ int joystick_math(int joystick_value, int deadzone){
     return 0;
 }
 
-void move_drive_motors(int FL_value, int BL_value, int FR_value, int BR_value, int ML_value, int MR_value){
+void move_drive_motors(float Left_value, float Right_value){
     //Move all motors with given value [-127,127]
-	FL.move(FL_value);
-	BL.move(BL_value);
+	FL.move(Left_value);
+    ML.move(Left_value);
+	BL.move(Left_value);
 		
-	FR.move(FR_value);
-	BR.move(BR_value);
-
-    //Setting one of those two to '1267'
-    //Does not run the motors at all.
-    //This can be useful in some situations
-    //Like strafing PID
-	if (ML_value != 1267 and MR_value != 1267){
-        ML.move(ML_value);
-	    MR.move(MR_value);
-    }
+	FR.move(Right_value);
+    MR.move(Right_value);
+	BR.move(Right_value);
 }
 
 void brake_drive(int type){

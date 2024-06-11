@@ -25,15 +25,10 @@ class DrivePID{
         double kp_fb;
         double ki_fb;
         double kd_fb;
-        //Turn with tracking wheels
-        double kp_tu_w;
-        double ki_tu_w;
-        double kd_tu_w;
-        //Strafe
-        double kp_st;
-        double ki_st;
-        double kd_st;
-        double ks_st;
+        //Turn
+        double kp_tu;
+        double ki_tu;
+        double kd_tu;
 
         int side_zero;
         int side_one;
@@ -42,10 +37,9 @@ class DrivePID{
 
         double iteration_time;
     public:
-        DrivePID(double kp_fb,double ki_fb,double kd_fb, double kp_tu_w,double ki_tu_w,double kd_tu_w, double kp_st,double ki_st,double kd_st,double ks_st, double iteration_time);
-        void move(double distance, double kp_opt = 1267, double ki_opt = 1267, double kd_opt = 1267);
-        void strafe(double distance, double kp_opt = 1267, double ki_opt = 1267, double kd_opt = 1267, double ks_opt = 1267);
-        void turn_wheels(double revolutions, double kp_opt = 1267, double ki_opt = 1267, double kd_opt = 1267);
+        DrivePID(double kp_fb,double ki_fb,double kd_fb, double kp_tu,double ki_tu,double kd_tu, double iteration_time);
+        void move(double distance, bool rev = 0, double kp_opt = 1267, double ki_opt = 1267, double kd_opt = 1267);
+        void turn(double angle, bool rev = 0, double kp_opt = 1267, double ki_opt = 1267, double kd_opt = 1267);
 };
 
 //Smart Controller Printing
