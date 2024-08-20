@@ -39,8 +39,8 @@ void opcontrol() {
 		left_y = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_LEFT_Y),15);
 		left_x = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_LEFT_X),15);
 		right_x = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_RIGHT_X),15);
+		
 		int L_value = left_y+left_x+right_x;
-
 		int R_value = left_y-left_x-right_x;
 
 		move_drive_motors(L_value,R_value);
