@@ -108,9 +108,9 @@ void DrivePID::move(double distance, bool rev, double kp_opt, double ki_opt, dou
     
     //These three ternary statements check if any custom
     //PID values have been passed into the function
-    double kp = (kp_opt == 1267) ? this->kp_fb:kp_opt;
-    double ki = (ki_opt == 1267) ? this->ki_fb:ki_opt;
-    double kd = (kd_opt == 1267) ? this->kd_fb:kd_opt;
+    double kp = (kp_opt != 1267) ? this->kp_fb:kp_opt;
+    double ki = (ki_opt != 1267) ? this->ki_fb:ki_opt;
+    double kd = (kd_opt != 1267) ? this->kd_fb:kd_opt;
 
     double integral_stop = 0.1;
     double breakvalue = 0.05; //Change
@@ -187,9 +187,9 @@ void DrivePID::turn(double distance, bool rev, double kp_opt, double ki_opt, dou
 
     //These three if statements check if any custom
     //values have been passed into the function
-    double kp = (kp_opt == 1267) ? this->kp_tu:kp_opt;
-    double ki = (ki_opt == 1267) ? this->ki_tu:ki_opt;
-    double kd = (kd_opt == 1267) ? this->kd_tu:kd_opt;
+    double kp = (kp_opt != 1267) ? this->kp_tu:kp_opt;
+    double ki = (ki_opt != 1267) ? this->ki_tu:ki_opt;
+    double kd = (kd_opt != 1267) ? this->kd_tu:kd_opt;
 
     double integral_stop = 0.1;
     double breakvalue = 0.05; //Change
