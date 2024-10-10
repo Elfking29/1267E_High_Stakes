@@ -10,12 +10,12 @@ int joystick_math(int joystick_value, int deadzone){
 void move_drive_motors(float Left_value, float Right_value){
     //Move all motors with given value [-127,127]
 	FL.move(Left_value);
-    //ML.move(Left_value);
-	//BL.move(Left_value);
+    ML.move(Left_value);
+	BL.move(Left_value);
 		
 	FR.move(Right_value);
-    //MR.move(Right_value);
-	//BR.move(Right_value);
+    MR.move(Right_value);
+	BR.move(Right_value);
 }
 
 void brake_drive(int type){
