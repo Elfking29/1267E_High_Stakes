@@ -49,8 +49,12 @@ void opcontrol() {
 
 		//Ramp Control
 		int button_a = Con1.get_digital(E_CONTROLLER_DIGITAL_A);
-		if (button_a == 1){
+		int button_b = Con1.get_digital(E_CONTROLLER_DIGITAL_B);
+		if (button_a == 1 && button_b != 1){
 			Ramp.move(127);
+		}
+		else if (button_b == 1 && button_a != 1){
+			Ramp.move(-127);
 		}
 		else{
 			Ramp.set_brake_mode(E_MOTOR_BRAKE_COAST);
