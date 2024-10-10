@@ -15,6 +15,9 @@ extern Motor BR;
 extern Motor ML;
 extern Motor MR;
 
+//Ramp
+extern Motor Ramp;
+
 //Tracking Wheels
 extern Rotation track_left;
 extern Rotation track_right;

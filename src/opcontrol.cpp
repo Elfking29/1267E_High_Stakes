@@ -47,6 +47,16 @@ void opcontrol() {
 
 		//End Drivetrain
 
+		//Ramp Control
+		int button_a = Con1.get_digital(E_CONTROLLER_DIGITAL_A);
+		if (button_a == 1){
+			Ramp.move(127);
+		}
+		else{
+			Ramp.set_brake_mode(E_MOTOR_BRAKE_COAST);
+			Ramp.brake();
+		}
+
 		//Everything below is printing
 		if (print_counter%5 == 0){ //This ensures that it only prints after 50 msecs have passed
 		//without needing a long wait period, which can cause input lag
