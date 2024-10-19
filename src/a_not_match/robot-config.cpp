@@ -17,14 +17,13 @@ Controller Con1 (CONTROLLER_MASTER);
 Port Number (Negative for reverse)
 MOTOR_GEAR_{100/200/600}
 */
-Motor FL (2,v5::MotorGears::blue);
-Motor BL (4,v5::MotorGears::blue);
+Motor FL (3,v5::MotorGears::blue);
+Motor ML (-4,v5::MotorGears::blue);
+Motor BL (-5,v5::MotorGears::blue);
 
-Motor FR (5,v5::MotorGears::blue);
-Motor BR (7,v5::MotorGears::blue);
-
-Motor ML (3,v5::MotorGears::blue);
-Motor MR (6,v5::MotorGears::blue);
+Motor FR (-6,v5::MotorGears::blue);
+Motor MR (7,v5::MotorGears::blue);
+Motor BR (8,v5::MotorGears::blue);
 
 //Tracking Wheels
 Rotation track_left(18);

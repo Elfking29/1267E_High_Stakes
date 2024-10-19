@@ -19,14 +19,14 @@ std::string sensor_value = "";
 
 void opcontrol() {
 	int total_time = 60;
-	int left_x; //Turn
-	int left_y; //Forwards & Backwards
+	int right_y; //Forwards & Backwards
 	int right_x; //Strafe
 	//int right_y;
 	if (auton_value == 4){
 		total_time = 60;
 	}
 	SmartCon OPPrint(total_time);
+	Con1.clear();
 	uint32_t sleep_time = millis();
 	int print_counter = 0;
 	while (true) {
@@ -36,25 +36,28 @@ void opcontrol() {
 		//Turn - Left: Negative, Right: Positive
 		//Strafe - Left: Negative, Right: Positive
 
-		left_y = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_LEFT_Y),15);
-		left_x = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_LEFT_X),15);
-		right_x = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_RIGHT_X),15);
+		right_y = Con1.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y);
+		right_x = Con1.get_analog(E_CONTROLLER_ANALOG_RIGHT_X);
 		
-		int L_value = left_y+left_x+right_x;
-		int R_value = left_y-left_x-right_x;
+		int L_value = right_y;
+		int R_value = right_y;
 
 		move_drive_motors(L_value,R_value);
 
 		//End Drivetrain
 
 		//Everything below is printing
-		if (print_counter%5 == 0){ //This ensures that it only prints after 50 msecs have passed
+		if (print_counter%50 == 0){ //This ensures that it only prints after 50 msecs have passed
 		//without needing a long wait period, which can cause input lag
 			rumble_pattern = "";
 			batteries = "Bat:" + std::to_string(battery::get_capacity()) + "%, " + std::to_string(Con1.get_battery_level()) + "%";
 			sensor_value = "";
 			match_time = OPPrint.get_time();
-			OPPrint.print(batteries,match_time,sensor_value,rumble_pattern,std::make_tuple(3,2,1));
+			//OPPrint.print(batteries,match_time,sensor_value,rumble_pattern,std::make_tuple(3,2,1));
+			int l = 1000*(FL.get_torque()+ML.get_torque()+BL.get_torque())/3;
+			int r = 1000*(FR.get_torque()+MR.get_torque()+BR.get_torque())/3;
+			Con1.clear();
+			Con1.print(1,0,"%d, %d",l,r);
 		}
 		print_counter += 1;
 		//End printing
