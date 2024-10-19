@@ -25,6 +25,9 @@ Motor FR (-6,v5::MotorGears::blue);
 Motor MR (7,v5::MotorGears::blue);
 Motor BR (8,v5::MotorGears::blue);
 
+//Ramp Motor
+Motor Ramp (8,v5::MotorGears::green);
+
 //Tracking Wheels
 Rotation track_left(18);
 Rotation track_right(19);
