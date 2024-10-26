@@ -89,7 +89,9 @@ void MultiIMU::set_rotation(int rotation){
 }
 
 //Drivetrain PID
-DrivePID::DrivePID(double kp_fb,double ki_fb,double kd_fb, double kp_tu,double ki_tu,double kd_tu, double iteration_time){
+// Getting errors because I made this into a class, NEED TO FIX!!!
+class DrivePID::DrivePID(double kp_fb,double ki_fb,double kd_fb, double kp_tu,double ki_tu,double kd_tu, double iteration_time){
+    public:
     this->kp_fb = kp_fb;
     this->ki_fb = ki_fb;
     this->kd_fb = kd_fb;
@@ -120,7 +122,7 @@ void DrivePID::move(double distance, bool rev, double kp_opt, double ki_opt, dou
         revolutions = distance;
     }
     else {
-        revolutions = 3.141592*3.25*distance; 
+        revolutions = 3.141592*3.25*36/60*distance; 
         //(pi/tracking_wheel_diameter) = inches_per_rev
         //inches_per_rev*distance_in_inches = revolutions needed
     }
