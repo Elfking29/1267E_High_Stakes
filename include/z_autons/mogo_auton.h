@@ -1,1 +1,1 @@
-void mogo_auton();
+void mogo_auton(int color_value);

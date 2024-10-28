@@ -33,38 +33,41 @@ bool color_value = 0;
 //Define Buttons
 ScreenButton auton_type(15,10,220,150,0xCFFF04,0x004e38,"Mogo","Ring",0x000000,0x000000);
 ScreenButton color_type(250,10,220,150,0xd22630,0x0077c8,"Red","Blue",0x000000,0x000000);
+ScreenButton skills_tst(15,175,220,50,0xff580f,0xff580f,"Sklz Auto","Sklz Auto");
 ScreenButton pneu_tests(250,175,220,50,0xFF13F0,0xFF13F0,"PNEU OFF!", "Pneu On");
-ScreenButton skills_tst(15,175,220,50,0xff580f,0xff580f,"Skills A","Skills A");
 
 // competition_initaialize is the same as pre_auton.
 void competition_initialize() {
     //Initalize Buttons
     auton_type.enabled(1);
     color_type.enabled(1);
-    pneu_tests.enabled(1);
     skills_tst.enabled(1);
+    pneu_tests.enabled(1);
     pros::screen_touch_status_s_t status;
     int x;
     int y;
     bool wait = false;
     bool hold = true;
-    while (hold==1){
+    while (hold==true){
         //Track Touches & Update Buttons
         status = pros::screen::touch_status();
+        //Get touchscreen status
         if (status.touch_status==TOUCH_RELEASED and wait==false){
-            x = status.x;
-            y = status.y;
+            //If screen is pressed and not locked
+            x = status.x; //Get x value
+            y = status.y; //Get y value
             auton_type.poll(x,y);
             color_type.poll(x,y);
-            pneu_tests.poll(x,y);
             skills_tst.poll(x,y);
-            wait=true;
+            pneu_tests.poll(x,y);
+            wait=true; //Lock input
         }
         else if (status.touch_status!=TOUCH_RELEASED){
-            wait=false;
+            wait=false; //Release lock
         }
 
         //Set Variables
+        //This just sets variables for auton
         if (skills_tst.toggled()==1){
             auton_value = 3;
         }
@@ -72,11 +75,11 @@ void competition_initialize() {
             auton_value = auton_type.toggled();
         }
         color_value = color_type.toggled();
-        pros::Task::delay(1);
+        pros::Task::delay(1); //Delay before repeat
 
-        if (pneu_tests.toggled() == true){
-            hold = 0;
-        }
+        //if (pneu_tests.toggled() == true){
+            //hold = false;
+        //}
 
     }
 }
@@ -100,12 +103,12 @@ void autonomous() {
     logo();
     //Select Auton
     if (auton_value==3){
-        //skills_auton();
+        skills_auton();
     }
     else if (auton_value==0){
-        //mogo_auton();
+        mogo_auton(color_value);
     }
     else if (auton_value==1){
-        //ring_auton();
+        ring_auton(color_value);
     }
 }

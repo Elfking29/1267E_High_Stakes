@@ -75,31 +75,38 @@ void ScreenButton::draw_button(){
     std::string str_use;
     int color;
     double scale;
-    if (enable){
+    if (enable){ //Enabled Button
         //Draw toggled outline if needed
         //Also set other things
         if (toggle){
             screen::set_pen(this->border_two);
             str_use = this->str_two;
             color = this->color_two;
+            //Border, string, text
         }
         else {
             screen::set_pen(this->border_one);
             str_use = this->str_one;
             color = this->color_one;
+            //Border, string, text
         }
-        screen::fill_rect(this->x-margin,this->y-margin,this->x+this->length+margin,this->y+this->height+margin);
+        screen::fill_rect(this->x-margin,this->y-margin,
+        this->x+this->length+margin,this->y+this->height+margin);
         //Draw actual button
         screen::set_pen(color);
-        screen::fill_rect(this->x,this->y,this->x+this->length,this->y+this->height);
+        screen::fill_rect(this->x,this->y,this->x
+        +this->length,this->y+this->height);
         //Draw text
         screen::set_pen(0xfffffff);
         scale = 1.0/int(str_use.size());
-        screen::print(TEXT_LARGE,int(this->x+scale*this->length),int(this->y+scale*this->height),"%s",str_use);        
+        screen::print(TEXT_LARGE,int(this->x+scale*this->length)
+        ,int(this->y+scale*this->height),"%s",str_use);        
     }
     else {
+        //Disabled Button
         screen::set_pen(0x000000);
-        screen::fill_rect(this->x-margin,this->y-margin,this->x+this->length+margin,this->y+this->height+margin);
+        screen::fill_rect(this->x-margin,this->y-margin,
+        this->x+this->length+margin,this->y+this->height+margin);
     }
 }
 
@@ -113,7 +120,8 @@ void ScreenButton::poll(int touch_x, int touch_y){
     //accessing the data only once is faster 
 
     if (enable){
-        if (touch_x >= this->x and touch_x <= this->x+this->length and touch_y >= this->y and touch_y <= this->y+this->height){
+        if (touch_x >= this->x and touch_x <= this->x+this->length
+         and touch_y >= this->y and touch_y <= this->y+this->height){
             this->toggle = !this->toggle;
             this->draw_button();
         }
@@ -121,8 +129,9 @@ void ScreenButton::poll(int touch_x, int touch_y){
 }
 
 void ScreenButton::enabled(bool enable){
-    //Enable whenever you want buttone to display and touch
-    //Disable otherwise
+    //Enable whenever you want button to 
+    //display and allow touch, and
+    //disable otherwise
     this->enable=enable;
     this->draw_button();
 }

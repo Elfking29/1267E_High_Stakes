@@ -1,6 +1,6 @@
 #include "main.h"
-void mogo_auton(bool potato){
-    if (potato) {
+void mogo_auton(int color_value){
+    if (color_value) {
         /*
         // plans for mogo_auton: (all current values are rought estimates)
         // red version

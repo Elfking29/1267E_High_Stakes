@@ -1,6 +1,6 @@
 #include "main.h"
-void ring_auton(bool potato){
-    if (potato) {
+void ring_auton(int color_value){
+    if (color_value) {
         /*
         // plans for ring_auton: (all values are rough estimates)
         // red version
