@@ -30,6 +30,7 @@ SmartCon Initprint(0);
 int auton_value = 0;
 int color_value = 0;
 
+// competition_initaialize is the same as pre_auton.
 void competition_initialize() {
     
 }
