@@ -19,14 +19,13 @@ std::string sensor_value = "";
 
 void opcontrol() {
 	competition_initialize();
-	int total_time = 60;
+	autonomous();
+	while (1==1){
+		pros::Task::delay(10);
+	}
 	int right_y; //Forwards & Backwards
 	int right_x; //Strafe
-	//int right_y;
-	if (auton_value == 4){
-		total_time = 60;
-	}
-	SmartCon OPPrint(total_time);
+	SmartCon OPPrint(60);
 	Con1.clear();
 	uint32_t sleep_time = millis();
 	int print_counter = 0;

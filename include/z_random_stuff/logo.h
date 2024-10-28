@@ -1,1 +1,1 @@
-void Logo();
+void logo();

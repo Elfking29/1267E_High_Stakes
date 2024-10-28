@@ -55,30 +55,47 @@ void draw_ladder(){
 }
 
 //On-Screen Buttons
-ScreenButton::ScreenButton(int x, int y, int length, int height, int color, bool toggled){
+ScreenButton::ScreenButton(int x, int y, int length, int height, int color_one, int color_two, std::string str_one, std::string str_two, int border_one, int border_two, bool toggled){
     this->x=x;
     this->y=y;
     this->length=length;
     this->height=height;
-    this->color=color;
+    this->color_one=color_one;
+    this->color_two=color_two;
     this->toggle=toggled;
     this->enable=false;
+    this->str_one=str_one;
+    this->str_two=str_two;
+    this->border_one=border_one;
+    this->border_two=border_two;
 }
 
 void ScreenButton::draw_button(){
     int margin = 3;
+    std::string str_use;
+    int color;
+    double scale;
     if (enable){
         //Draw toggled outline if needed
+        //Also set other things
         if (toggle){
-            screen::set_pen(0xffffff);
+            screen::set_pen(this->border_two);
+            str_use = this->str_two;
+            color = this->color_two;
         }
         else {
-            screen::set_pen(0x000000);
+            screen::set_pen(this->border_one);
+            str_use = this->str_one;
+            color = this->color_one;
         }
         screen::fill_rect(this->x-margin,this->y-margin,this->x+this->length+margin,this->y+this->height+margin);
         //Draw actual button
-        screen::set_pen(this->color);
+        screen::set_pen(color);
         screen::fill_rect(this->x,this->y,this->x+this->length,this->y+this->height);
+        //Draw text
+        screen::set_pen(0xfffffff);
+        scale = 1.0/int(str_use.size());
+        screen::print(TEXT_LARGE,int(this->x+scale*this->length),int(this->y+scale*this->height),"%s",str_use);        
     }
     else {
         screen::set_pen(0x000000);
@@ -95,8 +112,6 @@ void ScreenButton::poll(int touch_x, int touch_y){
     //accessing the touch data dirctly is that
     //accessing the data only once is faster 
 
-    //This function should be placed inside a screen::touch_callback
-    //Example: screen::touch_callback(button::poll(),TOUCH_PRESSED)
     if (enable){
         if (touch_x >= this->x and touch_x <= this->x+this->length and touch_y >= this->y and touch_y <= this->y+this->height){
             this->toggle = !this->toggle;

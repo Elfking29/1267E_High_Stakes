@@ -90,8 +90,7 @@ void MultiIMU::set_rotation(int rotation){
 
 //Drivetrain PID
 // Getting errors because I made this into a class, NEED TO FIX!!!
-class DrivePID::DrivePID(double kp_fb,double ki_fb,double kd_fb, double kp_tu,double ki_tu,double kd_tu, double iteration_time){
-    public:
+DrivePID::DrivePID(double kp_fb,double ki_fb,double kd_fb, double kp_tu,double ki_tu,double kd_tu, double iteration_time){
     this->kp_fb = kp_fb;
     this->ki_fb = ki_fb;
     this->kd_fb = kd_fb;

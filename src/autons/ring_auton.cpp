@@ -1,6 +1,7 @@
 #include "main.h"
 void ring_auton(bool potato){
     if (potato) {
+        /*
         // plans for ring_auton: (all values are rough estimates)
         // red version
 
@@ -61,7 +62,7 @@ void ring_auton(bool potato){
 
 
         // drive to ladder?
-
+        */
 
     }
 }

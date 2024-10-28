@@ -28,11 +28,57 @@ void button_update(){
 
 SmartCon Initprint(0);
 int auton_value = 0;
-int color_value = 0;
+bool color_value = 0;
+
+//Define Buttons
+ScreenButton auton_type(15,10,220,150,0xCFFF04,0x004e38,"Mogo","Ring",0x000000,0x000000);
+ScreenButton color_type(250,10,220,150,0xd22630,0x0077c8,"Red","Blue",0x000000,0x000000);
+ScreenButton pneu_tests(250,175,220,50,0xFF13F0,0xFF13F0,"PNEU OFF!", "Pneu On");
+ScreenButton skills_tst(15,175,220,50,0xff580f,0xff580f,"Skills A","Skills A");
 
 // competition_initaialize is the same as pre_auton.
 void competition_initialize() {
-    
+    //Initalize Buttons
+    auton_type.enabled(1);
+    color_type.enabled(1);
+    pneu_tests.enabled(1);
+    skills_tst.enabled(1);
+    pros::screen_touch_status_s_t status;
+    int x;
+    int y;
+    bool wait = false;
+    bool hold = true;
+    while (hold==1){
+        //Track Touches & Update Buttons
+        status = pros::screen::touch_status();
+        if (status.touch_status==TOUCH_RELEASED and wait==false){
+            x = status.x;
+            y = status.y;
+            auton_type.poll(x,y);
+            color_type.poll(x,y);
+            pneu_tests.poll(x,y);
+            skills_tst.poll(x,y);
+            wait=true;
+        }
+        else if (status.touch_status!=TOUCH_RELEASED){
+            wait=false;
+        }
+
+        //Set Variables
+        if (skills_tst.toggled()==1){
+            auton_value = 3;
+        }
+        else {
+            auton_value = auton_type.toggled();
+        }
+        color_value = color_type.toggled();
+        pros::Task::delay(1);
+
+        if (pneu_tests.toggled() == true){
+            hold = 0;
+        }
+
+    }
 }
 
 /**
@@ -47,17 +93,19 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
+    auton_type.enabled(0);
+    color_type.enabled(0);
+    pneu_tests.enabled(0);
+    skills_tst.enabled(0);
+    logo();
     //Select Auton
-    if (auton_value==0){
-        //maybe run code here?
+    if (auton_value==3){
+        //skills_auton();
+    }
+    else if (auton_value==0){
+        //mogo_auton();
     }
     else if (auton_value==1){
-        mogo_auton();
-    }
-    else if (auton_value==2){
-        ring_auton();
-    }
-    else if (auton_value==3){
-        skills_auton();
+        //ring_auton();
     }
 }

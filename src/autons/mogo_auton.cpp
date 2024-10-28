@@ -1,6 +1,7 @@
 #include "main.h"
 void mogo_auton(bool potato){
     if (potato) {
+        /*
         // plans for mogo_auton: (all current values are rought estimates)
         // red version
 
@@ -41,6 +42,7 @@ void mogo_auton(bool potato){
 
         // drive into ladder, end auto
         move(36, false, 0, 0, 0); // fix pid values
+        */
     }
 
 }
