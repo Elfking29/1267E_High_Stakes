@@ -23,15 +23,6 @@ extern Rotation track_left;
 extern Rotation track_right;
 extern Rotation track_back;
 
-//Inertial
-extern IMU inertial;
-
-//Auton Stuff
-extern adi::Potentiometer selector;
-extern adi::DigitalIn changer;
-
-//Light Strip
-
 //Define global variables here
 extern int color_value;
 extern int auton_value;

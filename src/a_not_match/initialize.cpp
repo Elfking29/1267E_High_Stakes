@@ -7,7 +7,6 @@
  */
 
 void initialize() {
-    inertial.reset(true); //Blocks all other code until calibration is finished
 }
 
 /**
@@ -32,6 +31,7 @@ int auton_value = 0;
 int color_value = 0;
 
 void competition_initialize() {
+    
 }
 
 /**

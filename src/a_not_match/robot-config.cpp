@@ -26,16 +26,8 @@ Motor MR (7,v5::MotorGears::blue);
 Motor BR (8,v5::MotorGears::blue);
 
 //Ramp Motor
-Motor Ramp (8,v5::MotorGears::green);
+Motor Ramp (10,v5::MotorGears::green);
 
 //Tracking Wheels
-Rotation track_left(18);
-Rotation track_right(19);
-Rotation track_back(20);
-
-//Inertial
-IMU inertial (11);
-
-//Auton Stuff
-adi::Potentiometer selector (1,E_ADI_POT_EDR);
-adi::DigitalIn changer (2);
+Rotation track_left(19);
+Rotation track_right(20);

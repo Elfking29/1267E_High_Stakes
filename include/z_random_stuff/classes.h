@@ -38,8 +38,8 @@ class DrivePID{
         double iteration_time;
     public:
         DrivePID(double kp_fb,double ki_fb,double kd_fb, double kp_tu,double ki_tu,double kd_tu, double iteration_time);
-        void move(double distance, bool rev = 0, double kp_opt = 1267, double ki_opt = 1267, double kd_opt = 1267);
-        void turn(double angle, bool rev = 0, double kp_opt = 1267, double ki_opt = 1267, double kd_opt = 1267);
+        void move(double distance, bool rev = 0);
+        void turn(double angle, bool rev = 0);
 };
 
 //Smart Controller Printing

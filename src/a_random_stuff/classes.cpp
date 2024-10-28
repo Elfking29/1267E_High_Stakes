@@ -100,7 +100,7 @@ DrivePID::DrivePID(double kp_fb,double ki_fb,double kd_fb, double kp_tu,double k
 
 }
 
-void DrivePID::move(double distance, bool rev, double kp_opt, double ki_opt, double kd_opt){
+void DrivePID::move(double distance, bool rev){
     //These three values may not be needed, but can be tweaked
     double error_prior = 0;
     double integral_prior = 0;
@@ -108,9 +108,9 @@ void DrivePID::move(double distance, bool rev, double kp_opt, double ki_opt, dou
     
     //These three ternary statements check if any custom
     //PID values have been passed into the function
-    double kp = (kp_opt != 1267) ? this->kp_fb:kp_opt;
-    double ki = (ki_opt != 1267) ? this->ki_fb:ki_opt;
-    double kd = (kd_opt != 1267) ? this->kd_fb:kd_opt;
+    double kp = this->kp_fb;
+    double ki = this->ki_fb;
+    double kd = this->kd_fb;
 
     double integral_stop = 0.1;
     double breakvalue = 0.05; //Change
@@ -177,7 +177,7 @@ void DrivePID::move(double distance, bool rev, double kp_opt, double ki_opt, dou
     brake_drive();
 }
 
-void DrivePID::turn(double distance, bool rev, double kp_opt, double ki_opt, double kd_opt){
+void DrivePID::turn(double distance, bool rev){
     //Turns using tracking wheels
 
     //These three values may not be needed, but can be tweaked
@@ -187,9 +187,9 @@ void DrivePID::turn(double distance, bool rev, double kp_opt, double ki_opt, dou
 
     //These three if statements check if any custom
     //values have been passed into the function
-    double kp = (kp_opt != 1267) ? this->kp_tu:kp_opt;
-    double ki = (ki_opt != 1267) ? this->ki_tu:ki_opt;
-    double kd = (kd_opt != 1267) ? this->kd_tu:kd_opt;
+    double kp = this->kp_tu;
+    double ki = this->ki_tu;
+    double kd = this->kd_tu;
 
     double integral_stop = 0.1;
     double breakvalue = 0.05; //Change

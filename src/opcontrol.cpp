@@ -18,6 +18,7 @@ std::string match_time = "";
 std::string sensor_value = "";
 
 void opcontrol() {
+	competition_initialize();
 	int total_time = 60;
 	int right_y; //Forwards & Backwards
 	int right_x; //Strafe
@@ -34,16 +35,11 @@ void opcontrol() {
 		//The convention I am choosing that I will stick to is:
 		//Move - Forward: Positive, Backward: Negative
 		//Turn - Left: Negative, Right: Positive
-		//Strafe - Left: Negative, Right: Positive
-
 		right_y = Con1.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y);
 		right_x = Con1.get_analog(E_CONTROLLER_ANALOG_RIGHT_X);
-		
 		int L_value = right_y;
 		int R_value = right_y;
-
 		move_drive_motors(L_value,R_value);
-
 		//End Drivetrain
 
 		//Ramp Control
@@ -67,11 +63,7 @@ void opcontrol() {
 			batteries = "Bat:" + std::to_string(battery::get_capacity()) + "%, " + std::to_string(Con1.get_battery_level()) + "%";
 			sensor_value = "";
 			match_time = OPPrint.get_time();
-			//OPPrint.print(batteries,match_time,sensor_value,rumble_pattern,std::make_tuple(3,2,1));
-			int l = 1000*(FL.get_torque()+ML.get_torque()+BL.get_torque())/3;
-			int r = 1000*(FR.get_torque()+MR.get_torque()+BR.get_torque())/3;
-			Con1.clear();
-			Con1.print(1,0,"%d, %d",l,r);
+			OPPrint.print(batteries,match_time,sensor_value,rumble_pattern,std::make_tuple(3,2,1));
 		}
 		print_counter += 1;
 		//End printing
