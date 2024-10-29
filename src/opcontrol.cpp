@@ -18,11 +18,6 @@ std::string match_time = "";
 std::string sensor_value = "";
 
 void opcontrol() {
-	competition_initialize();
-	autonomous();
-	while (1==1){
-		pros::Task::delay(10);
-	}
 	int right_y; //Forwards & Backwards
 	int right_x; //Strafe
 	SmartCon OPPrint(60);
