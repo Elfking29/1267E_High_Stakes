@@ -17,6 +17,10 @@ extern Motor MR;
 
 //Ramp
 extern Motor Ramp;
+//Dunker
+extern Motor Dunk;
+//Clamp
+extern adi::DigitalIn Clamp;
 
 //Tracking Wheels
 extern Rotation track_left;

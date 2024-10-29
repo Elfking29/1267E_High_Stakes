@@ -295,7 +295,7 @@ std::tuple<int,std::string> SmartCon::print(std::string first, std::string secon
     
     if (this->debug == false and this->return_num != 0){
         if (return_num == 4){
-            pros::Controller(pros::E_CONTROLLER_MASTER).rumble(this->return_string.c_str());
+            //pros::Controller(pros::E_CONTROLLER_MASTER).rumble(this->return_string.c_str());
         }
         else{
             if (return_num == 1){
@@ -307,7 +307,7 @@ std::tuple<int,std::string> SmartCon::print(std::string first, std::string secon
             else if (return_num == 3){
                 line = std::get<2>(order);
             }
-            //pros::Controller(pros::E_CONTROLLER_MASTER).clear_line(line); Might need this
+            pros::Controller(pros::E_CONTROLLER_MASTER).clear_line(line); //Might need this
             pros::Controller(pros::E_CONTROLLER_MASTER).print(line,0,this->return_string.c_str());
         }
         //delay(40);

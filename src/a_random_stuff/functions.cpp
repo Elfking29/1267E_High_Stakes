@@ -1,10 +1,13 @@
 #include "main.h"
+
 int joystick_math(int joystick_value, int deadzone){
-    if (std::abs(joystick_value)>deadzone){
-        //return round((1.0/127)*joystick_value*std::abs(joystick_value));
-        return (joystick_value*std::abs(joystick_value));
-    } 
-    return 0;
+    //https://www.vexforum.com/t/optimizing-exponential-drive/73719
+    if (std::abs(joystick_value) < deadzone ){
+        return 0;
+    }
+    else {
+        return get_sign(joystick_value)*(1.2*pow(1.0356,std::abs(joystick_value))-1.2+0.2*std::abs(joystick_value));
+    }
 }
 
 
