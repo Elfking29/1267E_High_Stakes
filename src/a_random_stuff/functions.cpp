@@ -25,6 +25,19 @@ void move_drive_motors(float Left_value, float Right_value){
 	BR.move(Right_value);
 }
 
+void move_better_motors(float dl, float dr, float velocity, float delayt){
+
+    FL.move_relative(dl,velocity);
+    ML.move_relative(dl,velocity);
+    BL.move_relative(dl,velocity);
+
+    FR.move_relative(dr,velocity);
+    MR.move_relative(dr,velocity);
+    BR.move_relative(dr,velocity);
+
+    pros::delay(delayt);
+}
+
 
 void brake_drive(int type){
     if (type == 0){

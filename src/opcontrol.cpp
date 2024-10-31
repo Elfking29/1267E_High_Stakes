@@ -71,10 +71,10 @@ void opcontrol() {
 		//Dunker (<50 & >500)
 		Dunk.set_brake_mode(E_MOTOR_BRAKE_COAST);
 		//First, manual
-		if (button_up && !button_down){
+		if (button_up and !button_down){
 			Dunk.move(127);
 		}
-		else if (button_down && !button_up){
+		else if (button_down and !button_up){
 			Dunk.move(-127);
 		}
 		else {

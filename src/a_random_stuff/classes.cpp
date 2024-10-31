@@ -125,16 +125,22 @@ void DrivePID::move(double distance, bool rev){
         //(pi/tracking_wheel_diameter) = inches_per_rev
         //inches_per_rev*distance_in_inches = revolutions needed
     }
-    track_left.reset_position();
-    track_right.reset_position();
+    //track_left.reset_position();
+    //track_right.reset_position();
     uint32_t sleep_time = millis();
 
-    while (not break_check){
-		pros::Task::delay_until(&sleep_time, this->iteration_time);
+    while (!break_check){
+		pros::Task::delay_until(&sleep_time, 10);
 
         //Error is what kp ends up affecting
-        double error_l = revolutions - track_left.get_position()/3600.0;
-        double error_r = revolutions - track_right.get_position()/3600.0;
+        //double error_l = revolutions - track_left.get_position()/3600.0;
+        //double error_r = revolutions - track_right.get_position()/3600.0;
+        double left_avg = (FL.get_position() + ML.get_position() + BL.get_position())/3;
+        double right_avg = (FR.get_position() + MR.get_position() + BR.get_position())/3;
+
+        double error_l = revolutions - left_avg/3600.0;
+        double error_r = revolutions - right_avg/3600.0;
+
 
         //Integral is what ki ends up affecting
         double integral_l = integral_prior+error_l*iteration_time;
@@ -171,6 +177,7 @@ void DrivePID::move(double distance, bool rev){
         }
     }
     //This holds the motors, keeping their position
+    print_screen("3");
     brake_drive(1);
     //It then sets them to coast after a small delay
     //So they can go do other things
@@ -186,8 +193,6 @@ void DrivePID::turn(double distance, bool rev){
     double integral_prior = 0;
     double bias = 0;  
 
-    //These three if statements check if any custom
-    //values have been passed into the function
     double kp = this->kp_tu;
     double ki = this->ki_tu;
     double kd = this->kd_tu;

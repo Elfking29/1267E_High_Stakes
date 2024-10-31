@@ -28,7 +28,7 @@ void button_update(){
 
 SmartCon Initprint(0);
 int auton_value = 0;
-bool color_value = 0;
+int color_value = 0;
 
 //Define Buttons
 ScreenButton auton_type(15,10,220,150,0xCFFF04,0x004e38,"Mogo","Ring",0x000000,0x000000);
@@ -74,7 +74,13 @@ void competition_initialize() {
         else {
             auton_value = auton_type.toggled();
         }
-        color_value = color_type.toggled();
+
+        if (color_type.toggled()==1){
+            color_value = -1;
+        }
+        else{
+            color_value = 1;
+        }
         pros::Task::delay(1); //Delay before repeat
 
         //if (pneu_tests.toggled() == true){
@@ -102,6 +108,8 @@ void autonomous() {
     skills_tst.enabled(0);
     logo();
     //Select Auton
+    auton_value = 0;
+    color_value = 1;
     if (auton_value==3){
         skills_auton();
     }
