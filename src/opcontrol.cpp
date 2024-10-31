@@ -20,8 +20,6 @@ std::string sensor_value = "";
 void opcontrol() {
 	logo();
 	bool clamp_lock = false;
-	int dunk_state = 0;
-	int dunk_wait = 0;
 	double dunk_pos;
 	SmartCon OPPrint(60);
 	Con1.clear();
@@ -62,7 +60,7 @@ void opcontrol() {
 		if (button_r1 == 1){
 			Ramp.move(127);
 		}
-		else if (button_a == 1 && button_r1 != 1){
+		else if (button_b == 1 && button_r1 != 1){
 			Ramp.move(-127);
 		}
 		else{
@@ -73,63 +71,37 @@ void opcontrol() {
 		//Dunker (<50 & >500)
 		Dunk.set_brake_mode(E_MOTOR_BRAKE_COAST);
 		//First, manual
-		if (button_l1 && !button_l2){
+		if (button_up && !button_down){
 			Dunk.move(127);
-			dunk_state = 0;
 		}
-		else if (button_l2 && !button_l1){
+		else if (button_down && !button_up){
 			Dunk.move(-127);
-			dunk_state = 0;
 		}
 		else {
 			Dunk.brake();
 		}
-		//Now, automatic
+		//Now, automatic-ish
 		dunk_pos = Dunk.get_position();
-		//if (button_l1 or dunk_state!=0 and ){
-		if (1==2){
-			if (dunk_state!=2 and dunk_state!=3 && (dunk_pos<500 or dunk_state==1)){
-				if (dunk_pos<500){
-					Dunk.move(127);
-					dunk_state=1;
-				}
-				else{
-					//Dunk.brake();
-					dunk_state=2;
-				}
-			}
-			else if (dunk_state==2){
-				if (dunk_wait<50){
-					Dunk.move(127);
-					dunk_wait+=1;
-				}
-				else{
-					dunk_state=3;
-					dunk_wait=0;
-				}
-			}
-			else if (dunk_pos>=500 or dunk_state==3){
-				if (dunk_pos>=50){
-					Dunk.move(-127);
-					dunk_state = 3;
-				}
-				else{
-					Dunk.brake();
-					dunk_state=0;
-				}
-			}
-
+		if (button_l1){
+			Dunk.move(127);
 		}
-		//print_screen(std::to_string(dunk_pos));
+		else {
+			if (dunk_pos > 50){
+				Dunk.move(-127);
+			}
+			else {
+				Dunk.brake();
+			}
+		}
 
 
 
 		//Clamp
-		if (button_b && !clamp_lock){
+		if (button_a && !clamp_lock){
 			Clamp.toggle();
 			clamp_lock = true;
 		}
-		else if (!button_b){
+		else if (!button_a){
 			clamp_lock = false;
 		}
 
