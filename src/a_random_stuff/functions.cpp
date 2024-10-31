@@ -10,6 +10,9 @@ int joystick_math(int joystick_value, int deadzone){
     }
 }
 
+void print_screen(std::string str){
+    screen::print(TEXT_MEDIUM,1,1,"%s",str);
+}
 
 void move_drive_motors(float Left_value, float Right_value){
     //Move all motors with given value [-127,127]

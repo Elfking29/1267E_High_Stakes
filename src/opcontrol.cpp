@@ -19,11 +19,10 @@ std::string sensor_value = "";
 
 void opcontrol() {
 	logo();
-	int right_y; //Turn1
-	int left_x; //Turn2
-	int left_y; //FB
-	int clamp_lock = false;
-	bool dunk_wait=false;
+	bool clamp_lock = false;
+	int dunk_state = 0;
+	int dunk_wait = 0;
+	double dunk_pos;
 	SmartCon OPPrint(60);
 	Con1.clear();
 	uint32_t sleep_time = millis();
@@ -33,19 +32,31 @@ void opcontrol() {
 		//The convention I am choosing that I will stick to is:
 		//Move - Forward: Positive, Backward: Negative
 		//Turn - Left: Negative, Right: Positive
-		right_y = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y),15);
-		left_x = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_LEFT_X),15);
-		left_y = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_LEFT_Y),15);
-		int Left_value = left_y+left_x-right_y;
-		int Right_value = left_y-left_x+right_y;
+		int left_x = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_LEFT_X),15); //Turn2
+		int left_y = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_LEFT_Y),15); //FB
+		int right_x = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_RIGHT_X),15); //Nothing
+		int right_y = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y),15); //Turn1
+		int Left_value = left_y+left_x-right_y+right_x;
+		int Right_value = left_y-left_x+right_y-right_x;
 		move_drive_motors(Left_value,Right_value);
 		//End Drivetrain
 
 		//Buttons
-
 		int button_a = Con1.get_digital(E_CONTROLLER_DIGITAL_A);
+		int button_b = Con1.get_digital(E_CONTROLLER_DIGITAL_B);
+		int button_x = Con1.get_digital(E_CONTROLLER_DIGITAL_X);
+		int button_y = Con1.get_digital(E_CONTROLLER_DIGITAL_Y);
+
+		int button_up = Con1.get_digital(E_CONTROLLER_DIGITAL_UP);
+		int button_down = Con1.get_digital(E_CONTROLLER_DIGITAL_DOWN);
+		int button_left = Con1.get_digital(E_CONTROLLER_DIGITAL_LEFT);
+		int button_right = Con1.get_digital(E_CONTROLLER_DIGITAL_RIGHT);
+
+		int button_l1 = Con1.get_digital(E_CONTROLLER_DIGITAL_L1);
+		int button_l2 = Con1.get_digital(E_CONTROLLER_DIGITAL_L2);
 		int button_r1 = Con1.get_digital(E_CONTROLLER_DIGITAL_R1);
-		int button_l1 = Con1.get_digital(E_CONTROLLER_DIGITAL_L2);
+		int button_r2 = Con1.get_digital(E_CONTROLLER_DIGITAL_R2);
+
 
 		//Ramp
 		if (button_r1 == 1){
@@ -59,13 +70,69 @@ void opcontrol() {
 			Ramp.brake();
 		}
 
-		//Dunker
+		//Dunker (<50 & >500)
+		Dunk.set_brake_mode(E_MOTOR_BRAKE_COAST);
+		//First, manual
+		if (button_l1 && !button_l2){
+			Dunk.move(127);
+			dunk_state = 0;
+		}
+		else if (button_l2 && !button_l1){
+			Dunk.move(-127);
+			dunk_state = 0;
+		}
+		else {
+			Dunk.brake();
+		}
+		//Now, automatic
+		dunk_pos = Dunk.get_position();
+		//if (button_l1 or dunk_state!=0 and ){
+		if (1==2){
+			if (dunk_state!=2 and dunk_state!=3 && (dunk_pos<500 or dunk_state==1)){
+				if (dunk_pos<500){
+					Dunk.move(127);
+					dunk_state=1;
+				}
+				else{
+					//Dunk.brake();
+					dunk_state=2;
+				}
+			}
+			else if (dunk_state==2){
+				if (dunk_wait<50){
+					Dunk.move(127);
+					dunk_wait+=1;
+				}
+				else{
+					dunk_state=3;
+					dunk_wait=0;
+				}
+			}
+			else if (dunk_pos>=500 or dunk_state==3){
+				if (dunk_pos>=50){
+					Dunk.move(-127);
+					dunk_state = 3;
+				}
+				else{
+					Dunk.brake();
+					dunk_state=0;
+				}
+			}
+
+		}
+		//print_screen(std::to_string(dunk_pos));
+
+
 
 		//Clamp
-		//Clamp.set_value(0);
-		if (Clamp.get_new_press){
-			screen::print(TEXT_MEDIUM,1,1,"9g9esg9g9js");
+		if (button_b && !clamp_lock){
+			Clamp.toggle();
+			clamp_lock = true;
 		}
+		else if (!button_b){
+			clamp_lock = false;
+		}
+
 		//Everything below is printing
 		if (print_counter%50 == 0){ //This ensures that it only prints after 50 msecs have passed
 		//without needing a long wait period, which can cause input lag

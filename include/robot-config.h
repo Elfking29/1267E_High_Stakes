@@ -20,7 +20,7 @@ extern Motor Ramp;
 //Dunker
 extern Motor Dunk;
 //Clamp
-extern adi::DigitalIn Clamp;
+extern pros::adi::Pneumatics Clamp;
 
 //Tracking Wheels
 extern Rotation track_left;

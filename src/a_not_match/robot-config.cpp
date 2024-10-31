@@ -30,8 +30,7 @@ Motor Ramp (-10,v5::MotorGears::green);
 //Dunker
 Motor Dunk (9,v5::MotorGears::green);
 //Clamp
-adi::DigitalIn Clamp (8,false);
-
+pros::adi::Pneumatics Clamp ('h',false);
 //Tracking Wheels
 Rotation track_left(19);
 Rotation track_right(20);
