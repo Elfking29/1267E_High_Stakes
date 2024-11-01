@@ -21,10 +21,12 @@ void opcontrol() {
 	logo();
 	bool clamp_lock = false;
 	double dunk_pos;
+	bool dunk_lock = false;
 	SmartCon OPPrint(60);
 	Con1.clear();
 	uint32_t sleep_time = millis();
 	int print_counter = 0;
+	Dunk.set_brake_mode(E_MOTOR_BRAKE_COAST);
 	while (true) {
 		//Drivetrain Movement
 		//The convention I am choosing that I will stick to is:
@@ -69,23 +71,25 @@ void opcontrol() {
 		}
 
 		//Dunker (<50 & >500)
-		Dunk.set_brake_mode(E_MOTOR_BRAKE_COAST);
+		dunk_pos = Dunk.get_position();
 		//First, manual
-		if (button_up and !button_down){
+		if (button_up){
 			Dunk.move(127);
+			dunk_lock = true;
 		}
 		else if (button_down and !button_up){
 			Dunk.move(-127);
+			dunk_lock = true;
 		}
 		else {
 			Dunk.brake();
+			dunk_lock = false;
 		}
 		//Now, automatic-ish
-		dunk_pos = Dunk.get_position();
-		if (button_l1){
+		if (button_l1 && !dunk_lock){
 			Dunk.move(127);
 		}
-		else {
+		else if (!dunk_lock){
 			if (dunk_pos > 50){
 				Dunk.move(-127);
 			}

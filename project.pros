@@ -79,7 +79,9 @@
       }
     },
     "upload_options": {
-      "description": "The official code for 1267E for the High Stakes Season."
+      "description": "The official code for 1267E for the High Stakes Season.",
+      "icon": "pros",
+      "after": "run"
     },
     "use_early_access": false
   }
