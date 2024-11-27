@@ -1,5 +1,6 @@
 #include "main.h"
 void mogo_auton(int color_value){
+        delay(6500);
         move_better_motors(-465,-465,150,1000); //Move Forward
         move_better_motors(color_value*-500,color_value*500,150,750);
         //Turn to align with stake

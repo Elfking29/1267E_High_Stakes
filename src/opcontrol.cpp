@@ -22,6 +22,7 @@ void opcontrol() {
 	bool clamp_lock = false;
 	double dunk_pos;
 	bool dunk_lock = false;
+	float clamp_use = 0.5;
 	SmartCon OPPrint(60);
 	Con1.clear();
 	uint32_t sleep_time = millis();
@@ -104,13 +105,19 @@ void opcontrol() {
 		if (button_a && !clamp_lock){
 			Clamp.toggle();
 			clamp_lock = true;
-		}
+			clamp_use += 0.5;
+			}
 		else if (!button_a){
 			clamp_lock = false;
 		}
 
 		//Everything below is printing
-		if (print_counter%50 == 0){ //This ensures that it only prints after 50 msecs have passed
+		if (print_counter%50 == 0){
+			Con1.print(0,0,"%d",int(clamp_use));
+		}
+
+
+		if (print_counter%50 == 0 and 1 == 2){ //This ensures that it only prints after 50 msecs have passed
 		//without needing a long wait period, which can cause input lag
 			rumble_pattern = "";
 			batteries = "Bat:" + std::to_string(battery::get_capacity()) + "%, " + std::to_string(Con1.get_battery_level()) + "%";

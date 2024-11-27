@@ -108,7 +108,7 @@ void autonomous() {
     skills_tst.enabled(0);
     logo();
     //Select Auton
-    //auton_value = 0;
+    //auton_value = 1;
     //color_value = 1;
     if (auton_value==3){
         skills_auton();

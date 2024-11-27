@@ -1,6 +1,6 @@
 #include "main.h"
 void ring_auton(int color_value){
-        move_better_motors(2000,2000,600,5000);
+        move_better_motors(-2000,-2000,100,13000);
         move_drive_motors(0,0);
         /*
         // plans for ring_auton: (all values are rough estimates)
