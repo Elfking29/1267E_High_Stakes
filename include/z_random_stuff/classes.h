@@ -21,7 +21,7 @@ class MultiIMU{
 //PID Loops for Drivetrain
 class DrivePID{
     private:
-    //Forward & Backward
+        //Forward & Backward
         double kp_fb;
         double ki_fb;
         double kd_fb;
@@ -30,15 +30,34 @@ class DrivePID{
         double ki_tu;
         double kd_tu;
 
-        int side_zero;
-        int side_one;
-        int side_two;
-        int side_three;
+        //General
+        bool finish;
+        double breakpoint;
+        int dt;
+        double target;
+        std::uint32_t time;
 
-        double iteration_time;
+        //Loop
+        double l_encode;
+        double r_encode;
+        double l_error;
+        double r_error;
+        double lp;
+        double rp;
+        double li;
+        double ri;
+        double loe;
+        double roe;
+        double ld;
+        double rd;
+        double l_motor;
+        double r_motor;
+
     public:
-        DrivePID(double kp_fb,double ki_fb,double kd_fb, double kp_tu,double ki_tu,double kd_tu, double iteration_time);
-        void move(double distance, bool rev = 0);
+        bool is_finished();
+        DrivePID(double kp_fb,double ki_fb,double kd_fb, double kp_tu,double ki_tu,double kd_tu, double dt=10);
+        void move_prepare(double distance, bool rev=0);
+        void pid_move();
         void turn(double angle, bool rev = 0);
 };
 
