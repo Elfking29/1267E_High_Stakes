@@ -109,13 +109,22 @@ DrivePID::DrivePID(double kp_fb,double ki_fb,double kd_fb, double kp_tu,double k
 
 }
 
-void DrivePID::move_prepare(double distance, bool rev){
-	this->target = rev==0?distance:(360*distance)/(4*3.1416)*1/1;
-	//360 - Convert into revolutions
-	//distance (inches)
-	//wheel diameter (inches)
-	//pi
-	//gear ratio (motor/wheel)
+void DrivePID::prepare(double distangle, bool turn, bool rev){
+    this->turn=turn;
+    if (!this->turn){
+        this->target = rev==0?distangle:(360*distangle)/(4*3.1416)*(1/1);
+        //360 - Convert into revolutions
+        //distance (inches)
+        //wheel diameter (inches)
+        //pi
+        //gear ratio (motor/wheel)
+    }
+    else {
+        float r = 1; //Radius of drivetrain
+        this->target = rev==0?distangle:(2*r*distangle/4)*(1/1);
+        //This is a form of the arc length equation
+        //See page 149 of notebook for details
+    }
 
 	//set correct encoder units
 	FL.set_encoder_units(MOTOR_ENCODER_DEGREES);
@@ -134,9 +143,9 @@ void DrivePID::move_prepare(double distance, bool rev){
 	//Set motor position to 0
 	std::uint32_t time = millis();
 }
-void DrivePID::pid_move(){
-	this->l_encode = (FL.get_position()+ML.get_position()+BL.get_position())/4;
-	this->r_encode = (FL.get_position()+MR.get_position()+BR.get_position())/2;
+void DrivePID::move(){
+	this->l_encode = (FL.get_position()+ML.get_position()+BL.get_position())/3;
+	this->r_encode = (FL.get_position()+MR.get_position()+BR.get_position())/3;
 	//This averages all three motors, which is more accurate
 
 	//Error for both sides
@@ -164,9 +173,14 @@ void DrivePID::pid_move(){
 	this->roe = this->r_error;
 
 	//Motor values
-	this->l_motor = this->lp+this->li+this->ld;
-	this->r_motor = this->rp+this->ri+this->rd;
-
+    if (!this->turn){
+        this->l_motor = this->lp+this->li+this->ld;
+        this->r_motor = this->rp+this->ri+this->rd;
+    }
+    else {
+        this->l_motor = (this->lp+this->li+this->ld+this->rp+this->ri+this->rd)/2;
+        this->r_motor = -this->l_motor;
+    }
 	//Move motors
 	move_drive_motors(this->l_motor,this->r_motor);
 
