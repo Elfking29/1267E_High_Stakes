@@ -5,12 +5,12 @@ void mogo_auton(int color_value){
         move_better_motors(color_value*-500,color_value*500,150,750);
         //Turn to align with stake
         move_better_motors(-160,-160,150,500); //Move to stake
-        Dunk.move_relative(520,127); //Dunk ring
+        Arm.move_relative(520,127); //Dunk ring
         delay(750); //wait
-        Dunk.move(-64); //Retract dunker
+        Arm.move(-64); //Retract dunker
         delay(1000); //wait
-        Dunk.set_brake_mode(E_MOTOR_BRAKE_COAST);
-        Dunk.brake(); //stop dunker
+        Arm.set_brake_mode(E_MOTOR_BRAKE_COAST);
+        Arm.brake(); //stop dunker
         move_better_motors(200,200,300,500); //move backwards
         move_better_motors(-825*color_value,825*color_value,200,1000);
         //turn towards mogo

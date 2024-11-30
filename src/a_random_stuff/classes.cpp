@@ -126,7 +126,12 @@ void DrivePID::prepare(double distangle, bool turn, bool rev){
         //See page 149 of notebook for details
     }
 
-	//set correct encoder units
+    //Set correct k constants
+    this->kp=this->turn==0?this->kp_fb:this->kp_tu;
+    this->ki=this->turn==0?this->ki_fb:this->ki_tu;
+    this->kd=this->turn==0?this->kd_fb:this->kd_tu;
+
+	//Set correct encoder units (degrees)
 	FL.set_encoder_units(MOTOR_ENCODER_DEGREES);
     ML.set_encoder_units(MOTOR_ENCODER_DEGREES);
 	BL.set_encoder_units(MOTOR_ENCODER_DEGREES);
@@ -134,15 +139,18 @@ void DrivePID::prepare(double distangle, bool turn, bool rev){
     MR.set_encoder_units(MOTOR_ENCODER_DEGREES);
 	BR.set_encoder_units(MOTOR_ENCODER_DEGREES);
 
+	//Set motor position to 0
 	FL.tare_position();
     ML.tare_position();
 	BL.tare_position();
 	FR.tare_position();
     MR.tare_position();
 	BR.tare_position();
-	//Set motor position to 0
+
+    //Set time
 	std::uint32_t time = millis();
 }
+
 void DrivePID::move(){
 	this->l_encode = (FL.get_position()+ML.get_position()+BL.get_position())/3;
 	this->r_encode = (FL.get_position()+MR.get_position()+BR.get_position())/3;
@@ -153,20 +161,20 @@ void DrivePID::move(){
 	this->r_error = this->target-this->r_encode;
 
 	//Proportional for both sides
-	this->lp = this->kp_fb*this->l_error;
-	this->rp = this->kp_fb*this->r_error;
+	this->lp = this->kp*this->l_error;
+	this->rp = this->kp*this->r_error;
 
 	//Integral for both sides
 	//Use the ternery operator to keep it compact
 	//If error is 0, we want the integral at 0
 	//Also, if error > +-100, then it should be 0
 	float arb_num = 100;
-	this->li = this->l_error>std::abs(arb_num)?0:this->l_error==0?0:this->ki_fb*(this->li+this->dt*this->l_error);
-	this->ri = this->r_error>std::abs(arb_num)?0:this->r_error==0?0:this->ki_fb*(this->ri+this->dt*this->r_error);
+	this->li = this->l_error>std::abs(arb_num)?0:this->l_error==0?0:this->ki*(this->li+this->dt*this->l_error);
+	this->ri = this->r_error>std::abs(arb_num)?0:this->r_error==0?0:this->ki*(this->ri+this->dt*this->r_error);
 
 	//Derivative for both sides
-	this->ld = this->kd_fb*(this->l_error-this->loe)/this->dt;
-	this->rd = this->kd_fb*(this->r_error-this->roe)/this->dt;
+	this->ld = this->kd*(this->l_error-this->loe)/this->dt;
+	this->rd = this->kd*(this->r_error-this->roe)/this->dt;
 
 	//Set previous error to error
 	this->loe = this->l_error;
@@ -181,6 +189,7 @@ void DrivePID::move(){
         this->l_motor = (this->lp+this->li+this->ld+this->rp+this->ri+this->rd)/2;
         this->r_motor = -this->l_motor;
     }
+    
 	//Move motors
 	move_drive_motors(this->l_motor,this->r_motor);
 
@@ -188,6 +197,8 @@ void DrivePID::move(){
 	if (fabs(this->l_motor)<=this->breakpoint and fabs(this->r_motor)<=this->breakpoint){
 		this->finish = true;
 	}
+
+    //Delay for 10 msec
     Task::delay_until(&this->time,this->dt);
 }
 
@@ -197,94 +208,11 @@ bool DrivePID::is_finished(){
 
 /*
 How to use PIDmove:
-    pid_prepare(distance);
+    prepare(distance, turn {0/1});
     while(!is_finished()){
-        pid_move();
+        other_stuff_first();
+        move();
     }
-*/
-
-/*
-void DrivePID::turn(double distance, bool rev){
-    Turns using tracking wheels
-
-    //These three values may not be needed, but can be tweaked
-    double error_prior = 0;
-    double integral_prior = 0;
-    double bias = 0;  
-
-    double kp = this->kp_tu;
-    double ki = this->ki_tu;
-    double kd = this->kd_tu;
-
-    double integral_stop = 0.1;
-    double breakvalue = 0.05; //Change
-    bool break_check = false;
-
-    //Convert angle to rev. Requires previous math
-    double deg_to_rev = 0; //MUST BE CHANGED
-    double revolutions;
-    if (rev){
-        revolutions = distance;
-    }
-    else {
-        revolutions = distance*deg_to_rev;
-    }
-    
-
-    track_left.reset_position();
-    track_right.reset_position();
-    uint32_t sleep_time = millis();
-
-    while (not break_check){
-		pros::Task::delay_until(&sleep_time, this->iteration_time);
-
-        //Error is what kp ends up affecting
-        double error_l = revolutions - track_left.get_position()/3600.0;
-        //revolutions in error_r is made negative so the robot turns
-        double error_r = -revolutions - track_right.get_position()/3600.0;
-
-        //Integral is what ki ends up affecting
-        double integral_l = integral_prior+error_l*iteration_time;
-        double integral_r = integral_prior+error_r*iteration_time;
-        //These two if statements make the integral 0 if the error
-        //is really close to 0
-        if (error_l >= -integral_stop and error_l <= integral_stop){
-            integral_l = 0;
-        }
-        if (error_r >= -integral_stop and error_r <= integral_stop){
-            integral_r = 0;
-        }
-
-        //Derivative is what kd ends up affecting
-        double derivative_l = (error_l-error_prior)/iteration_time;
-        double derivative_r = (error_r-error_prior)/iteration_time;
-
-        //A fourth constant for side drift is not needed because
-        //we have two tracking wheels, so we can calculate the
-        //desired value for each side differently
-
-        //This determines what the output should be to the motors
-        //The 1.27 converts the out of 100 value into a value out of 127
-        double output_l = 1.27*kp*error_l+ki*integral_l+kd*derivative_l+bias;
-        double output_r = 1.27*kp*error_r+ki*integral_r+kd*derivative_r+bias;
-
-        //This sets the output of the motors
-        move_drive_motors(output_l, output_r);
-
-        //This checks if power values are in tolerence
-        //If they are, then break out of the loop
-        if (error_l >= -breakvalue and error_l <= breakvalue and error_r >= -breakvalue and error_r <= breakvalue){
-            break_check = true;
-        }
-    }
-    //This holds the motors, keeping their position
-    brake_drive(1);
-    //It then sets them to coast after a small delay
-    //So they can go do other things
-    delay(50);
-    brake_drive();
-    
-}
 */
 
 //Smart Controller Printing

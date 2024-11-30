@@ -18,7 +18,7 @@ extern Motor MR;
 //Ramp
 extern Motor Ramp;
 //Dunker
-extern Motor Dunk;
+extern Motor Arm;
 //Clamp
 extern pros::adi::Pneumatics Clamp;
 

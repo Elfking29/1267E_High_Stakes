@@ -12,27 +12,19 @@
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-std::string rumble_pattern = "";
-std::string batteries = "";
-std::string match_time = "";
-std::string sensor_value = "";
 
 void opcontrol() {
 	logo();
 	bool clamp_lock = false;
-	double dunk_pos;
-	bool dunk_lock = false;
 	float clamp_use = 0.5;
 	SmartCon OPPrint(60);
 	Con1.clear();
 	uint32_t sleep_time = millis();
 	int print_counter = 0;
-	Dunk.set_brake_mode(E_MOTOR_BRAKE_COAST);
+	Arm.set_brake_mode(E_MOTOR_BRAKE_COAST);
+	Ramp.set_brake_mode(E_MOTOR_BRAKE_COAST);
 	while (true) {
 		//Drivetrain Movement
-		//The convention I am choosing that I will stick to is:
-		//Move - Forward: Positive, Backward: Negative
-		//Turn - Left: Negative, Right: Positive
 		int left_x = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_LEFT_X),15); //Turn2
 		int left_y = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_LEFT_Y),15); //FB
 		int right_x = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_RIGHT_X),15); //Nothing
@@ -43,6 +35,8 @@ void opcontrol() {
 		//End Drivetrain
 
 		//Buttons
+		//Most of these don't do anything right now
+		//However, they are nice to have
 		int button_a = Con1.get_digital(E_CONTROLLER_DIGITAL_A);
 		int button_b = Con1.get_digital(E_CONTROLLER_DIGITAL_B);
 		int button_x = Con1.get_digital(E_CONTROLLER_DIGITAL_X);
@@ -67,37 +61,20 @@ void opcontrol() {
 			Ramp.move(-127);
 		}
 		else{
-			Ramp.set_brake_mode(E_MOTOR_BRAKE_COAST);
 			Ramp.brake();
 		}
 
-		//Dunker (<50 & >500)
-		dunk_pos = Dunk.get_position();
 		//First, manual
 		if (button_up){
-			Dunk.move(127);
-			dunk_lock = true;
+			Arm.move(127);
 		}
 		else if (button_down and !button_up){
-			Dunk.move(-127);
-			dunk_lock = true;
+			Arm.move(-127);
 		}
 		else {
-			Dunk.brake();
-			dunk_lock = false;
+			Arm.brake();
 		}
-		//Now, automatic-ish
-		if (button_l1 && !dunk_lock){
-			Dunk.move(127);
-		}
-		else if (!dunk_lock){
-			if (dunk_pos > 50){
-				Dunk.move(-127);
-			}
-			else {
-				Dunk.brake();
-			}
-		}
+
 
 
 
@@ -116,15 +93,6 @@ void opcontrol() {
 			Con1.print(0,0,"%d",int(clamp_use));
 		}
 
-
-		if (print_counter%50 == 0 and 1 == 2){ //This ensures that it only prints after 50 msecs have passed
-		//without needing a long wait period, which can cause input lag
-			rumble_pattern = "";
-			batteries = "Bat:" + std::to_string(battery::get_capacity()) + "%, " + std::to_string(Con1.get_battery_level()) + "%";
-			sensor_value = "";
-			match_time = OPPrint.get_time();
-			OPPrint.print(batteries,match_time,sensor_value,rumble_pattern,std::make_tuple(3,2,1));
-		}
 		print_counter += 1;
 		//End printing
 		pros::Task::delay_until(&sleep_time, 10);

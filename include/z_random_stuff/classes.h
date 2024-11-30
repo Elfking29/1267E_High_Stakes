@@ -53,6 +53,9 @@ class DrivePID{
         double rd;
         double l_motor;
         double r_motor;
+        double kp;
+        double ki;
+        double kd;
 
     public:
         bool is_finished();

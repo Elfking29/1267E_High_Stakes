@@ -28,7 +28,7 @@ Motor BR (14,v5::MotorGears::blue);
 //Ramp Motor
 Motor Ramp (-10,v5::MotorGears::green);
 //Dunker
-Motor Dunk (9,v5::MotorGears::green);
+Motor Arm (9,v5::MotorGears::green);
 //Clamp
 pros::adi::Pneumatics Clamp ('h',false);
 //Tracking Wheels
