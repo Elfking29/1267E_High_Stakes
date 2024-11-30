@@ -25,12 +25,12 @@ void opcontrol() {
 	Ramp.set_brake_mode(E_MOTOR_BRAKE_COAST);
 	while (true) {
 		//Drivetrain Movement
-		int left_x = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_LEFT_X),15); //Turn2
-		int left_y = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_LEFT_Y),15); //FB
+		int left_x = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_LEFT_X),15); //Turn
+		int left_y = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_LEFT_Y),15); //Nothing
 		int right_x = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_RIGHT_X),15); //Nothing
-		int right_y = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y),15); //Turn1
-		int Left_value = left_y+left_x-right_y;
-		int Right_value = left_y-left_x+right_y;
+		int right_y = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y),15); //FB
+		int Left_value = right_y+left_x;
+		int Right_value = right_y-left_x;
 		move_drive_motors(Left_value,Right_value);
 		//End Drivetrain
 
