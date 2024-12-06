@@ -31,6 +31,5 @@ Motor Ramp (-10,v5::MotorGears::green);
 Motor Arm (9,v5::MotorGears::green);
 //Clamp
 pros::adi::Pneumatics Clamp ('h',false);
-//Tracking Wheels
-Rotation track_left(19);
-Rotation track_right(20);
+//Sensors
+Distance Checker (19);

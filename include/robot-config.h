@@ -21,11 +21,8 @@ extern Motor Ramp;
 extern Motor Arm;
 //Clamp
 extern pros::adi::Pneumatics Clamp;
-
-//Tracking Wheels
-extern Rotation track_left;
-extern Rotation track_right;
-extern Rotation track_back;
+//Sensors
+extern Distance Checker;
 
 //Define global variables here
 extern double robot_angle;
