@@ -21,6 +21,7 @@ void opcontrol() {
 	bool arm_stop;
 	bool ramp_stop;
 	int ramp_pos;
+	int arm_preset;
 	SmartCon OPPrint(60);
 	Con1.clear();
 	uint32_t sleep_time = millis();
@@ -59,22 +60,68 @@ void opcontrol() {
 
 
 		//Ramp
-		if (button_r1 == 1){
+		if (button_right == 1){
 			Ramp.move(127);
+			dunk_state = 5;
 		}
-		else if (button_b == 1 && button_r1 != 1){
+		else if (button_left == 1 && button_left != 1){
 			Ramp.move(-127);
+			dunk_state = 5;
 		}
 		else{
 			Ramp.brake();
 		}
 
-		//First, manual
+		//Arm
+		if (button_up == 1){
+			Arm.move(127);
+			dunk_state = 5;
+		}
+		else if (button_down == 1 && button_up != 1){
+			Arm.move(-127);
+			dunk_state = 5;
+		}
+		else if (!dunk_state){
+			Arm.brake();
+		}
 
-		if (button_r2 and !dunk_state){
+		//Arm Presets
+		//All numbers need to be tweaked
+		if (button_a or button_b or button_x or button_y){
+			if (dunk_state != 5){
+				dunk_state = 5;
+			}
+
+			if (button_x){
+				arm_preset = 1000;
+				//Wall Stake Height
+			}
+			else if (button_y){
+				arm_preset = 500;
+				//Alliance Stake Height
+			}
+			else if (button_a){
+				arm_preset = 250;
+				//Dunk Height
+			}
+			else if (button_b){
+				arm_preset = 0;
+				//Lowered
+			}
+
+			Arm.move_absolute(arm_preset,100);
+			if (Arm.get_position()>arm_preset-10 and Arm.get_position()<arm_preset+10){
+				Arm.brake();
+				dunk_state = 0;
+			}
+		}
+
+
+		//Automatic Dunking
+		if (button_r1 and !dunk_state){
 			dunk_state = 1;
 		}
-		else if (!button_r2){
+		else if (!button_r1){
 			dunk_state = 0;
 		}
 
