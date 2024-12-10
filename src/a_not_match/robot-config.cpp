@@ -17,19 +17,19 @@ Controller Con1 (CONTROLLER_MASTER);
 Port Number (Negative for reverse)
 MOTOR_GEAR_{100/200/600}
 */
-Motor FL (2,v5::MotorGears::blue);
-Motor ML (-5,v5::MotorGears::blue);
-Motor BL (-4,v5::MotorGears::blue);
+Motor FL (11,v5::MotorGears::blue);
+Motor ML (-12,v5::MotorGears::blue);
+Motor BL (-13,v5::MotorGears::blue);
 
-Motor FR (-12,v5::MotorGears::blue);
-Motor MR (13,v5::MotorGears::blue);
-Motor BR (14,v5::MotorGears::blue);
+Motor FR (-14,v5::MotorGears::blue);
+Motor MR (15,v5::MotorGears::blue);
+Motor BR (16,v5::MotorGears::blue);
 
 //Ramp Motor
-Motor Ramp (-10,v5::MotorGears::green);
+Motor Ramp (-18,v5::MotorGears::red);
 //Dunker
-Motor Arm (9,v5::MotorGears::green);
+Motor Arm (19,v5::MotorGears::red);
 //Clamp
 pros::adi::Pneumatics Clamp ('h',false);
 //Sensors
-Distance Checker (19);
+Distance Checker (10);
