@@ -112,7 +112,7 @@ DrivePID::DrivePID(double kp_fb,double ki_fb,double kd_fb, double kp_tu,double k
 void DrivePID::prepare(double distangle, bool turn, bool rev){
     this->turn=turn;
     if (!this->turn){
-        this->target = rev==0?distangle:(360*distangle)/(4*3.1416)*(1/1);
+        this->target = rev==0?distangle:(360*distangle)/(3.25*3.1416)*(36/60);
         //360 - Convert into revolutions
         //distance (inches)
         //wheel diameter (inches)
@@ -121,7 +121,7 @@ void DrivePID::prepare(double distangle, bool turn, bool rev){
     }
     else {
         float r = 1; //Radius of drivetrain
-        this->target = rev==0?distangle:(2*r*distangle/4)*(1/1);
+        this->target = rev==0?distangle:(2*6.5*distangle/3.25)*(36/60);
         //This is a form of the arc length equation
         //See page 149 of notebook for details
     }

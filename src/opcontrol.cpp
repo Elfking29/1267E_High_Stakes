@@ -18,8 +18,6 @@ void opcontrol() {
 	bool clamp_lock = false;
 	float clamp_use = 0.5;
 	int dunk_state = 0;
-	bool arm_stop;
-	bool ramp_stop;
 	int ramp_pos;
 	int arm_preset;
 	SmartCon OPPrint(60);
@@ -28,7 +26,7 @@ void opcontrol() {
 	int print_counter = 0;
 	Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
 	Arm.set_encoder_units(MOTOR_ENCODER_DEGREES);
-	Ramp.set_brake_mode(MOTOR_BRAKE_BRAKE);
+	Ramp.set_brake_mode(MOTOR_BRAKE_COAST);
 	while (true) {
 		//Drivetrain Movement
 		int left_x = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_LEFT_X),15); //Turn
@@ -64,16 +62,19 @@ void opcontrol() {
 			Ramp.move(127);
 			dunk_state = 5;
 		}
-		else if (button_left == 1 && button_left != 1){
+		else if (button_left == 1 && button_right != 1){
 			Ramp.move(-127);
 			dunk_state = 5;
 		}
-		else{
+		else if (!dunk_state){
 			Ramp.brake();
 		}
 
 		//Arm
-		if (button_up == 1){
+		if (Arm.get_position() > 600){
+			Arm.move(-127);
+		}
+		else if (button_up == 1){
 			Arm.move(127);
 			dunk_state = 5;
 		}
@@ -81,30 +82,25 @@ void opcontrol() {
 			Arm.move(-127);
 			dunk_state = 5;
 		}
-		else if (!dunk_state){
-			Arm.brake();
+		else if (!dunk_state or dunk_state == 1){
+			if (Arm.get_position()<290 or Arm.get_position()>310){
+				Arm.move_absolute(300,100);
+			}
+			else{
+				Arm.brake();
+			}
 		}
 
 		//Arm Presets
 		//All numbers need to be tweaked
-		if (button_a or button_b or button_x or button_y){
-			if (dunk_state != 5){
-				dunk_state = 5;
-			}
+		if (button_l2 or button_r2){
+			dunk_state = 6;
 
-			if (button_x){
-				arm_preset = 1000;
+			if (button_r2){
+				arm_preset = 560;
 				//Wall Stake Height
 			}
-			else if (button_y){
-				arm_preset = 500;
-				//Alliance Stake Height
-			}
-			else if (button_a){
-				arm_preset = 250;
-				//Dunk Height
-			}
-			else if (button_b){
+			else if (button_l2){
 				arm_preset = 0;
 				//Lowered
 			}
@@ -112,8 +108,10 @@ void opcontrol() {
 			Arm.move_absolute(arm_preset,100);
 			if (Arm.get_position()>arm_preset-10 and Arm.get_position()<arm_preset+10){
 				Arm.brake();
-				dunk_state = 0;
 			}
+		}
+		else if (dunk_state == 6 and print_counter%50==0){
+			dunk_state = 0;
 		}
 
 
@@ -121,35 +119,24 @@ void opcontrol() {
 		if (button_r1 and !dunk_state){
 			dunk_state = 1;
 		}
-		else if (!button_r1){
+		else if (!button_r1 and dunk_state != 6){
 			dunk_state = 0;
 		}
 
 		switch(dunk_state){
 			case 1: //Step 0 :)
 				//This just resets variables	
-				arm_stop = false;
-				ramp_stop = false;
 				ramp_pos = 0;
 				dunk_state = 2;
 				break;
 			//See notebook for steps
 			case 2: //Steps 1 & 2
-				//Arm code first
-				Arm.move_absolute(500 /*change*/ ,100);
 				//Intake code
 				Ramp.move(127);
-
 				//If statements
-				if (Checker.get_distance()<20 /*change*/ ){
+
+				if (Checker.get_distance()<=60 and Arm.get_position()>=290 and Arm.get_position()<=310){
 					Ramp.brake();
-					ramp_stop = true;
-				}
-				if (Arm.get_position()<500+10 and Arm.get_position()>500-10){
-					Arm.brake();
-					arm_stop = true;
-				}
-				if (ramp_stop and arm_stop){
 					ramp_pos = Ramp.get_position();
 					dunk_state = 3;
 				}
@@ -157,8 +144,7 @@ void opcontrol() {
 				break;
 			case 3: //Step 3
 				Ramp.move(127);
-				if (Ramp.get_position() >= ramp_pos+500){
-					//500 needs to be changed
+				if (Ramp.get_position() >= ramp_pos+4000){
 					Ramp.brake();
 					dunk_state = 4;
 				}
@@ -166,6 +152,9 @@ void opcontrol() {
 			case 4: //Step 5
 				Arm.move_absolute(0,100);
 				if (Arm.get_position() < 15){
+					Arm.set_brake_mode(MOTOR_BRAKE_COAST);
+					Arm.brake();
+					Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
 					Arm.brake();
 					dunk_state = 1;
 				}
@@ -176,18 +165,18 @@ void opcontrol() {
 
 
 		//Clamp
-		if (button_a && !clamp_lock){
+		if (button_l1 && !clamp_lock){
 			Clamp.toggle();
 			clamp_lock = true;
 			clamp_use += 0.5;
 			}
-		else if (!button_a){
+		else if (!button_l1){
 			clamp_lock = false;
 		}
 
 		//Everything below is printing
 		if (print_counter%50 == 0){
-			Con1.print(0,0,"%d",int(clamp_use));
+			Con1.print(0,0,"%d",clamp_lock);
 		}
 
 		print_counter += 1;
