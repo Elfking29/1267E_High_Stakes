@@ -110,7 +110,7 @@ void opcontrol() {
 				Arm.brake();
 			}
 		}
-		else if (dunk_state == 6 and print_counter%50==0){
+		else if (dunk_state == 6 and print_counter%500==0){
 			dunk_state = 0;
 		}
 
