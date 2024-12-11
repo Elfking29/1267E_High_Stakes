@@ -33,6 +33,7 @@ VERSION:=1.0.0
 EXCLUDE_SRC_FROM_LIB+=$(SRCDIR)/opcontrol.cpp
 EXCLUDE_SRC_FROM_LIB+=$(SRCDIR)/autons
 EXCLUDE_SRC_FROM_LIB+=$(SRCDIR)/a_not_match/initialize.cpp
+EXCLUDE_SRC_FROM_LIB+=$(SRCDIR)/autons/*.cpp
 # Would like to remove the last one later
 # this line excludes opcontrol.c and similar files
 
