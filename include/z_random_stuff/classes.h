@@ -61,7 +61,7 @@ class DrivePID{
         bool is_finished();
         DrivePID(double kp_fb,double ki_fb,double kd_fb, double kp_tu,double ki_tu,double kd_tu, double dt=10);
         void prepare(double distangle, bool turn=0, bool rev=0);
-        void move();
+        void go();
         //void turn(double angle, bool rev = 0);
 };
 

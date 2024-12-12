@@ -18,11 +18,11 @@ Port Number (Negative for reverse)
 MOTOR_GEAR_{100/200/600}
 */
 Motor BR (11,v5::MotorGears::blue);
-Motor MR (-12,v5::MotorGears::blue);
+Motor MR (12,v5::MotorGears::blue);
 Motor FR (-13,v5::MotorGears::blue);
 
 Motor BL (-14,v5::MotorGears::blue);
-Motor ML (-12,v5::MotorGears::blue);
+Motor ML (-15,v5::MotorGears::blue);
 Motor FL (16,v5::MotorGears::blue);
 
 //Ramp Motor

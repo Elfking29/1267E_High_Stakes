@@ -99,7 +99,7 @@ DrivePID::DrivePID(double kp_fb,double ki_fb,double kd_fb, double kp_tu,double k
     this->kd_tu = kd_tu;
 
     this->finish=false;
-    this->breakpoint=5;
+    this->breakpoint=15;
     this->dt=dt;
 
     this->li=0;
@@ -111,8 +111,8 @@ DrivePID::DrivePID(double kp_fb,double ki_fb,double kd_fb, double kp_tu,double k
 
 void DrivePID::prepare(double distangle, bool turn, bool rev){
     this->turn=turn;
-    if (!this->turn){
-        this->target = rev==0?distangle:(360*distangle)/(3.25*3.1416)*(36/60);
+    if (this->turn == false){
+        this->target = (360*distangle*60)/(3.25*3.1416*36);
         //360 - Convert into revolutions
         //distance (inches)
         //wheel diameter (inches)
@@ -120,12 +120,11 @@ void DrivePID::prepare(double distangle, bool turn, bool rev){
         //gear ratio (motor/wheel)
     }
     else {
-        float r = 1; //Radius of drivetrain
-        this->target = rev==0?distangle:(2*6.5*distangle/3.25)*(36/60);
+        //this->target = (2*6.5*distangle/3.25)*(60/36);
+        this->target = distangle*1900/315;
         //This is a form of the arc length equation
         //See page 149 of notebook for details
     }
-
     //Set correct k constants
     this->kp=this->turn==0?this->kp_fb:this->kp_tu;
     this->ki=this->turn==0?this->ki_fb:this->ki_tu;
@@ -151,9 +150,10 @@ void DrivePID::prepare(double distangle, bool turn, bool rev){
 	std::uint32_t time = millis();
 }
 
-void DrivePID::move(){
+void DrivePID::go(){
+
 	this->l_encode = (FL.get_position()+ML.get_position()+BL.get_position())/3;
-	this->r_encode = (FL.get_position()+MR.get_position()+BR.get_position())/3;
+	this->r_encode = -(FR.get_position()+MR.get_position()+BR.get_position())/3;
 	//This averages all three motors, which is more accurate
 
 	//Error for both sides
@@ -181,7 +181,7 @@ void DrivePID::move(){
 	this->roe = this->r_error;
 
 	//Motor values
-    if (!this->turn){
+    if (this->turn == 0){
         this->l_motor = this->lp+this->li+this->ld;
         this->r_motor = this->rp+this->ri+this->rd;
     }
@@ -189,18 +189,26 @@ void DrivePID::move(){
         this->l_motor = (this->lp+this->li+this->ld+this->rp+this->ri+this->rd)/2;
         this->r_motor = -this->l_motor;
     }
-    
+
+    //gaeb was here ;P
+
 	//Move motors
 	move_drive_motors(this->l_motor,this->r_motor);
+
+    Con1.print(0,0,"%i,%i",int(this->target), int(this->l_motor));
 
 	//Calculate whether loop should end
 	if (fabs(this->l_motor)<=this->breakpoint and fabs(this->r_motor)<=this->breakpoint){
 		this->finish = true;
+        Arm.move_absolute(500,100);
 	}
+
 
     //Delay for 10 msec
     Task::delay_until(&this->time,this->dt);
 }
+
+
 
 bool DrivePID::is_finished(){
     return this->finish;

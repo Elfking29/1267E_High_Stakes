@@ -14,7 +14,10 @@
  */
 
 void opcontrol() {
+	pros::Imu imu (20);
 	logo();
+	ring_auton(0);
+	while (1==1){}
 	bool clamp_lock = false;
 	float clamp_use = 0.5;
 	int dunk_state = 0;
@@ -175,8 +178,11 @@ void opcontrol() {
 		}
 
 		//Everything below is printing
-		if (print_counter%50 == 0){
-			Con1.print(0,0,"%d",clamp_lock);
+		if (print_counter%100 == 0){
+			Con1.print(0,0,"h");
+		}
+		else if (print_counter%50 == 0){
+			Con1.clear();
 		}
 
 		print_counter += 1;

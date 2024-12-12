@@ -1,68 +1,14 @@
 #include "main.h"
 void ring_auton(int color_value){
-        move_better_motors(-2000,-2000,100,13000);
-        move_drive_motors(0,0);
-        /*
-        // plans for ring_auton: (all values are rough estimates)
-        // red version
+    Con1.clear();
+    delay(50);
+    DrivePID drive(0.2,0,0.1,0.4,0,0);
+    drive.prepare(90,1);
+    while (!drive.is_finished()){
+        drive.go();
+    }
+    delay(50);
+    Con1.clear();
 
-        // drive into mogo
-        move(24, false, 0, 0, 0); // fix pid values
-
-        // clamp mogo
-
-
-        // rotate and move toward middle rings
-        turn(90, false, 0, 0, 0); // fix pid values
-        move(24, false, 0, 0, 0); // fix pid values
-
-        // intake middle ring one
-
-
-        // move + rotate for midddle ring two?
-
-
-        // intake middle ring two?
-
-
-        // rotate for ring stack behind
-
-
-        // drive to + intake ring
-
-
-        // drive to ladder?
-
-
-    } else {
-        // blue version
-
-        // drive into mogo
-        move(24, false, 0, 0, 0); // fix pid values
-
-        // clamp mogo
-
-
-        // rotate and move toward middle rings
-        turn(-90, false, 0, 0, 0); // fix pid values
-        move(24, false, 0, 0, 0); // fix pid values
-
-        // intake middle ring one
-
-
-        // move + rotate for midddle ring two?
-
-
-        // intake middle ring two?
-
-
-        // rotate for ring stack behind
-
-
-        // drive to + intake ring
-
-
-        // drive to ladder?
-        */
 
 }
