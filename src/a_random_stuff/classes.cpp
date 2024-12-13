@@ -195,7 +195,7 @@ void DrivePID::go(){
 	//Move motors
 	move_drive_motors(this->l_motor,this->r_motor);
 
-    Con1.print(0,0,"%i,%i",int(this->target), int(this->l_motor));
+    //Con1.print(0,0,"%i,%i",int(this->target), int(this->l_motor));
 
 	//Calculate whether loop should end
 	if (fabs(this->l_motor)<=this->breakpoint and fabs(this->r_motor)<=this->breakpoint){
