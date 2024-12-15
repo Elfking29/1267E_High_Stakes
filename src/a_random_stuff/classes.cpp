@@ -111,6 +111,7 @@ DrivePID::DrivePID(double kp_fb,double ki_fb,double kd_fb, double kp_tu,double k
 
 void DrivePID::prepare(double distangle, bool turn, bool rev){
     this->turn=turn;
+    this->finish = false;
     if (this->turn == false){
         this->target = (360*distangle*60)/(3.25*3.1416*36);
         //360 - Convert into revolutions
@@ -153,7 +154,10 @@ void DrivePID::prepare(double distangle, bool turn, bool rev){
 void DrivePID::go(){
 
 	this->l_encode = (FL.get_position()+ML.get_position()+BL.get_position())/3;
-	this->r_encode = -(FR.get_position()+MR.get_position()+BR.get_position())/3;
+	this->r_encode = (FR.get_position()+MR.get_position()+BR.get_position())/3;
+    if (this->turn==1){
+        this->r_encode = -this->r_encode;
+    }
 	//This averages all three motors, which is more accurate
 
 	//Error for both sides
@@ -195,12 +199,11 @@ void DrivePID::go(){
 	//Move motors
 	move_drive_motors(this->l_motor,this->r_motor);
 
-    //Con1.print(0,0,"%i,%i",int(this->target), int(this->l_motor));
+    Con1.print(0,0,"%i,%i",int(this->l_motor), int(this->r_motor));
 
 	//Calculate whether loop should end
 	if (fabs(this->l_motor)<=this->breakpoint and fabs(this->r_motor)<=this->breakpoint){
 		this->finish = true;
-        Arm.move_absolute(500,100);
 	}
 
 

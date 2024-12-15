@@ -14,10 +14,7 @@
  */
 
 void opcontrol() {
-	pros::Imu imu (20);
 	logo();
-	ring_auton(0);
-	while (1==1){}
 	bool clamp_lock = false;
 	float clamp_use = 0.5;
 	int dunk_state = 0;
@@ -74,7 +71,7 @@ void opcontrol() {
 		}
 
 		//Arm
-		if (Arm.get_position() > 600){
+		if (Arm.get_position() > 560){
 			Arm.move(-127);
 		}
 		else if (button_up == 1){
@@ -86,8 +83,8 @@ void opcontrol() {
 			dunk_state = 5;
 		}
 		else if (!dunk_state or dunk_state == 1){
-			if (Arm.get_position()<290 or Arm.get_position()>310){
-				Arm.move_absolute(300,100);
+			if (Arm.get_position()<420 or Arm.get_position()>430){
+				Arm.move_absolute(425,100);
 			}
 			else{
 				Arm.brake();
@@ -96,15 +93,19 @@ void opcontrol() {
 
 		//Arm Presets
 		//All numbers need to be tweaked
-		if (button_l2 or button_r2){
+		if (button_l2 or button_r2 or button_x){
 			dunk_state = 6;
 
 			if (button_r2){
-				arm_preset = 560;
+				arm_preset = 540;
 				//Wall Stake Height
 			}
 			else if (button_l2){
 				arm_preset = 0;
+				//Lowered
+			}
+			else if (button_x){
+				arm_preset = 300;
 				//Lowered
 			}
 
@@ -138,7 +139,7 @@ void opcontrol() {
 				Ramp.move(127);
 				//If statements
 
-				if (Checker.get_distance()<=60 and Arm.get_position()>=290 and Arm.get_position()<=310){
+				if (Checker.get_distance()<=60 and Arm.get_position()>=420 and Arm.get_position()<=430){
 					Ramp.brake();
 					ramp_pos = Ramp.get_position();
 					dunk_state = 3;
@@ -179,7 +180,7 @@ void opcontrol() {
 
 		//Everything below is printing
 		if (print_counter%100 == 0){
-			Con1.print(0,0,"h");
+			Con1.print(0,0,"%i",dunk_state);
 		}
 		else if (print_counter%50 == 0){
 			Con1.clear();
