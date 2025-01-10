@@ -17,16 +17,12 @@ void opcontrol() {
 	logo();
 	bool clamp_lock = false;
 	float clamp_use = 0.5;
-	int dunk_state = 0;
-	int ramp_pos;
-	int arm_preset;
 	SmartCon OPPrint(60);
 	Con1.clear();
 	uint32_t sleep_time = millis();
 	int print_counter = 0;
 	Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
-	Arm.set_encoder_units(MOTOR_ENCODER_DEGREES);
-	Ramp.set_brake_mode(MOTOR_BRAKE_COAST);
+	Intake.set_brake_mode(MOTOR_BRAKE_COAST);
 	while (true) {
 		//Drivetrain Movement
 		int left_x = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_LEFT_X),15); //Turn
@@ -57,115 +53,16 @@ void opcontrol() {
 		int button_r2 = Con1.get_digital(E_CONTROLLER_DIGITAL_R2);
 
 
-		//Ramp
-		if (button_right == 1){
-			Ramp.move(127);
-			dunk_state = 5;
+		//Intake
+		if (button_r1){
+			Intake.move(127);
 		}
-		else if (button_left == 1 && button_right != 1){
-			Ramp.move(-127);
-			dunk_state = 5;
+		else if (!button_r1 and button_left){
+			Intake.move(-127);
 		}
-		else if (!dunk_state){
-			Ramp.brake();
+		else {
+			Intake.brake();
 		}
-
-		//Arm
-		if (Arm.get_position() > 560){
-			Arm.move(-127);
-		}
-		else if (button_up == 1){
-			Arm.move(127);
-			dunk_state = 5;
-		}
-		else if (button_down == 1 && button_up != 1){
-			Arm.move(-127);
-			dunk_state = 5;
-		}
-		else if (!dunk_state or dunk_state == 1){
-			if (Arm.get_position()<420 or Arm.get_position()>430){
-				Arm.move_absolute(425,100);
-			}
-			else{
-				Arm.brake();
-			}
-		}
-
-		//Arm Presets
-		//All numbers need to be tweaked
-		if (button_l2 or button_r2 or button_x){
-			dunk_state = 6;
-
-			if (button_r2){
-				arm_preset = 540;
-				//Wall Stake Height
-			}
-			else if (button_l2){
-				arm_preset = 0;
-				//Lowered
-			}
-			else if (button_x){
-				arm_preset = 300;
-				//Lowered
-			}
-
-			Arm.move_absolute(arm_preset,100);
-			if (Arm.get_position()>arm_preset-10 and Arm.get_position()<arm_preset+10){
-				Arm.brake();
-			}
-		}
-		else if (dunk_state == 6 and print_counter%500==0){
-			dunk_state = 0;
-		}
-
-
-		//Automatic Dunking
-		if (button_r1 and !dunk_state){
-			dunk_state = 1;
-		}
-		else if (!button_r1 and dunk_state != 6){
-			dunk_state = 0;
-		}
-
-		switch(dunk_state){
-			case 1: //Step 0 :)
-				//This just resets variables	
-				ramp_pos = 0;
-				dunk_state = 2;
-				break;
-			//See notebook for steps
-			case 2: //Steps 1 & 2
-				//Intake code
-				Ramp.move(127);
-				//If statements
-
-				if (Checker.get_distance()<=60 and Arm.get_position()>=420 and Arm.get_position()<=430){
-					Ramp.brake();
-					ramp_pos = Ramp.get_position();
-					dunk_state = 3;
-				}
-
-				break;
-			case 3: //Step 3
-				Ramp.move(127);
-				if (Ramp.get_position() >= ramp_pos+4000){
-					Ramp.brake();
-					dunk_state = 4;
-				}
-				break;
-			case 4: //Step 5
-				Arm.move_absolute(0,100);
-				if (Arm.get_position() < 15){
-					Arm.set_brake_mode(MOTOR_BRAKE_COAST);
-					Arm.brake();
-					Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
-					Arm.brake();
-					dunk_state = 1;
-				}
-				break;
-		}
-
-
 
 
 		//Clamp
@@ -180,7 +77,7 @@ void opcontrol() {
 
 		//Everything below is printing
 		if (print_counter%100 == 0){
-			Con1.print(0,0,"%i",dunk_state);
+			Con1.print(0,0,"%i",clamp_use);
 		}
 		else if (print_counter%50 == 0){
 			Con1.clear();

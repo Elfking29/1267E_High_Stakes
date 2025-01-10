@@ -4,7 +4,7 @@ void ring_auton(int color_value){
     DrivePID drive(0.2,0,0.1,0.4,0,0);
     delay(100);
     drive.prepare(-7);
-    Ramp.move(127);
+    //Ramp.move(127);
     while (!drive.is_finished()){
         drive.go();
     }

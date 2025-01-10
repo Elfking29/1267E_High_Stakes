@@ -25,11 +25,12 @@ Motor BL (-14,v5::MotorGears::blue);
 Motor ML (-15,v5::MotorGears::blue);
 Motor FL (16,v5::MotorGears::blue);
 
-//Ramp Motor
-Motor Ramp (18,v5::MotorGears::red);
+//Intake Motor
+Motor Intake (-18,v5::MotorGears::green);
 //Dunker
 Motor Arm (-19,v5::MotorGears::red);
 //Clamp
 pros::adi::Pneumatics Clamp ('h',false);
 //Sensors
-Distance Checker (10);
+Optical Color (10);
+Rotation Rotaty (9);

@@ -15,14 +15,15 @@ extern Motor BR;
 extern Motor ML;
 extern Motor MR;
 
-//Ramp
-extern Motor Ramp;
+//Intake
+extern Motor Intake;
 //Dunker
 extern Motor Arm;
 //Clamp
 extern pros::adi::Pneumatics Clamp;
 //Sensors
-extern Distance Checker;
+extern Optical Color;
+extern Rotation Rotaty;
 
 //Define global variables here
 extern double robot_angle;

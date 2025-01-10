@@ -110,6 +110,7 @@ void autonomous() {
     //Select Auton
     //auton_value = 1;
     //color_value = 1;
+    Clamp.toggle();
     if (auton_value==3){
         skills_auton();
     }
