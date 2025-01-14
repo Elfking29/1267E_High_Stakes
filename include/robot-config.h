@@ -19,8 +19,9 @@ extern Motor MR;
 extern Motor Intake;
 //Dunker
 extern Motor Arm;
-//Clamp
+//Pneumatics
 extern pros::adi::Pneumatics Clamp;
+extern pros::adi::Pneumatics Corner;
 //Sensors
 extern Optical Color;
 extern Rotation Rotaty;

@@ -7,7 +7,6 @@
  */
 
 void initialize() {
-    logo();
 }
 
 /**

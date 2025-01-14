@@ -16,7 +16,8 @@
 void opcontrol() {
 	logo();
 	bool clamp_lock = false;
-	float clamp_use = 0.5;
+	bool corner_lock = false;
+	int pneu_use = 1;
 	SmartCon OPPrint(60);
 	Con1.clear();
 	uint32_t sleep_time = millis();
@@ -69,15 +70,25 @@ void opcontrol() {
 		if (button_l1 && !clamp_lock){
 			Clamp.toggle();
 			clamp_lock = true;
-			clamp_use += 0.5;
+			pneu_use += 1;
 			}
 		else if (!button_l1){
 			clamp_lock = false;
 		}
 
+		//Cornerer
+		if (button_l2 && !corner_lock){
+			Corner.toggle();
+			corner_lock = true;
+			pneu_use += 1;
+			}
+		else if (!button_l2){
+			corner_lock = false;
+		}
+
 		//Everything below is printing
 		if (print_counter%100 == 0){
-			Con1.print(0,0,"%i",clamp_use);
+			Con1.print(0,0,"%i",pneu_use/2);
 		}
 		else if (print_counter%50 == 0){
 			Con1.clear();
