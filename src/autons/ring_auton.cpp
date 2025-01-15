@@ -1,8 +1,8 @@
 #include "main.h"
 void ring_auton(int color_value){
-    DrivePID drive(0.2,0,0.1,15,0,0.4);
+    DrivePID drive(0.2,0,0.1,1,0,0.2);
     delay(100);
-    drive.prepare(-12);
+    drive.prepare(-11);
     while (!drive.is_finished()){
         drive.go();
     }
@@ -23,7 +23,7 @@ void ring_auton(int color_value){
     while (!drive.is_finished()){
         drive.go();
     }
-    drive.prepare(-135*color_value,1);
+    drive.prepare(-150*color_value,1);
     while (!drive.is_finished()){
         drive.go();
     }
@@ -39,9 +39,16 @@ void ring_auton(int color_value){
     }   
     Clamp.toggle();
     delay(500);
-    drive.prepare(-145*color_value,1);
+    drive.prepare(-155*color_value,1);
     while (!drive.is_finished()){
         drive.go();
     }   
+    Intake.move(127);
+    delay(250);
+    drive.prepare(20);
+    while(!drive.is_finished()){
+        drive.go();
+    }
+    delay(15000);
     }
     
