@@ -80,11 +80,11 @@ void opcontrol() {
 		//Cornerer
 		if (button_l2 && !corner_lock){
 			Corner.toggle();
-			corner_lock = true;
-			pneu_use += 1;
+			corner_lock=true;
 			}
-		else if (!button_l2){
-			corner_lock = false;
+		else if (!button_l2 && corner_lock){
+			Corner.toggle();
+			corner_lock=false;
 		}
 
 		//Everything below is printing
