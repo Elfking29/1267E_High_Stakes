@@ -14,7 +14,7 @@
  */
 
 void opcontrol() {
-	ring_auton(-1);
+	ring_auton(1);
 	logo();
 	bool clamp_lock = false;
 	bool corner_lock = false;

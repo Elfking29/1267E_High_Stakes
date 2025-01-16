@@ -118,6 +118,6 @@ void autonomous() {
         mogo_auton(color_value);
     }
     else if (auton_value==1){
-        ring_auton(color_value);
+        ring_auton(-color_value);
     }
 }
