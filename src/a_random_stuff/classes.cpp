@@ -148,7 +148,8 @@ void DrivePID::prepare(double distangle, bool turn, bool rev){
 	BR.tare_position();
 
     //Set time
-	std::uint32_t time = millis();
+	this->time = millis();
+    this->st = this->time;
 }
 
 void DrivePID::go(){
@@ -215,6 +216,12 @@ void DrivePID::go(){
 
 bool DrivePID::is_finished(){
     return this->finish;
+}
+
+void DrivePID::timeout(int t){
+    if (this->time+this->st >= this->st+t){
+        this->finish = true;
+    }
 }
 
 /*

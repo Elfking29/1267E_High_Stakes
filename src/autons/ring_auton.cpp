@@ -14,6 +14,7 @@ void ring_auton(int color_value){
     drive.prepare(-3.8);
     while (!drive.is_finished()){
         drive.go();
+        drive.timeout(1500);
     }
     Intake.move_relative(1000,127);
     delay(1000);
@@ -22,6 +23,7 @@ void ring_auton(int color_value){
     drive.prepare(4);
     while (!drive.is_finished()){
         drive.go();
+        drive.timeout(1500);
     }
     drive.prepare(150*color_value,1);
     while (!drive.is_finished()){
@@ -36,6 +38,7 @@ void ring_auton(int color_value){
     drive.prepare(-7);
     while (!drive.is_finished()){
         drive.go();
+        drive.timeout(2000);
     }   
     Clamp.toggle();
     delay(500);
