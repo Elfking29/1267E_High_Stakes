@@ -112,12 +112,12 @@ void autonomous() {
     //color_value = 1;
     Clamp.toggle();
     if (auton_value==3){
-        skills_auton();
-    }
-    else if (auton_value==0){
         mogo_auton(color_value);
     }
-    else if (auton_value==1){
+    else if (auton_value==0){
         ring_auton(-color_value);
+    }
+    else if (auton_value==1){
+        ring_auton(color_value);
     }
 }

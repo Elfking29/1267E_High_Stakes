@@ -205,6 +205,23 @@ void DrivePID::go(){
 	//Calculate whether loop should end
 	if (fabs(this->l_motor)<=this->breakpoint and fabs(this->r_motor)<=this->breakpoint){
 		this->finish = true;
+        FL.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+        BL.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+
+        FR.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+        BR.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+
+        ML.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+        MR.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+
+        FL.brake();
+        BL.brake();
+
+        FR.brake();
+        BR.brake();
+
+        ML.brake();
+        MR.brake();
 	}
 
 

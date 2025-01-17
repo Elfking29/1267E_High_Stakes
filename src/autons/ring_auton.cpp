@@ -20,46 +20,46 @@ void ring_auton(int color_value){
     delay(1000);
     Intake.move_relative(-500,64);
     delay(250);
-    drive.prepare(4);
+    drive.prepare(5);
     while (!drive.is_finished()){
         drive.go();
-        drive.timeout(1500);
+        //drive.timeout(1500);
     }
-    drive.prepare(150*color_value,1);
+    drive.prepare(145*color_value,1);
     while (!drive.is_finished()){
         drive.go();
     }
-    delay(250);
+    delay(500);
     drive.prepare(-30);
     while (!drive.is_finished()){
         drive.go();
     }
     delay(500);
-    drive.prepare(-7);
+    drive.prepare(-6);
     while (!drive.is_finished()){
         drive.go();
-        drive.timeout(2000);
+        //drive.timeout(2000);
     }   
     Clamp.toggle();
     delay(500);
-    drive.prepare(155*color_value,1);
+    drive.prepare(130*color_value,1);
     while (!drive.is_finished()){
         drive.go();
     }   
     Intake.move(127);
-    delay(250);
-    drive.prepare(20);
+    delay(500);
+    drive.prepare(30);
     while(!drive.is_finished()){
         drive.go();
     }
     delay(3000);
-    drive.prepare(-15*color_value,1); //Adjust
+    drive.prepare(-25*color_value,1); //Adjust
     while(!drive.is_finished()){
         drive.go();
     }
     Intake.brake();
     delay(250);
-    drive.prepare(36); //Adjust
+    drive.prepare(-36); //Adjust
     while(!drive.is_finished()){
         drive.go();
     }   
