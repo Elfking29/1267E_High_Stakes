@@ -1,0 +1,1 @@
+void rush_auton(int color_value);

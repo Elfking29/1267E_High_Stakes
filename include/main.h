@@ -36,8 +36,9 @@
 
 #include "api.h"
 #include "robot-config.h"
-#include "z_autons/mogo_auton.h"
-#include "z_autons/ring_auton.h"
+#include "z_autons/full_auton.h"
+#include "z_autons/rush_auton.h"
+#include "z_autons/bonk_auton.h"
 #include "z_autons/skills_auton.h"
 #include "z_random_stuff/classes.h"
 #include "z_random_stuff/functions.h"

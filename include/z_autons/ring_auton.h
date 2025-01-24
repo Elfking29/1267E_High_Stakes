@@ -1,1 +1,0 @@
-void ring_auton(int color_value);
