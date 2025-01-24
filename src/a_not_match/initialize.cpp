@@ -31,18 +31,20 @@ int auton_value = 0;
 int color_value = 0;
 
 //Define Buttons
-ScreenButton auton_type(15,10,220,150,0xCFFF04,0x004e38,"Mogo","Ring",0x000000,0x000000);
-ScreenButton color_type(250,10,220,150,0xd22630,0x0077c8,"Red","Blue",0x000000,0x000000);
+ScreenButton color_type(15,10,220,150,0xD22630,0x0077c8,"Red","Blue",0x000000,0x000000);
+ScreenButton full_auton(250,10,220,50,0x004e38,0x004e38,"Full","Full");
+ScreenButton mogo_auton(250,100,220,50,0xCFFF04,0xCFFF04,"Mogo","Mogo");
 ScreenButton skills_tst(15,175,220,50,0xff580f,0xff580f,"Sklz Auto","Sklz Auto");
-ScreenButton pneu_tests(250,175,220,50,0xFF13F0,0xFF13F0,"PNEU OFF!", "Pneu On");
+ScreenButton rush_auton(250,175,220,50,0xFF13F0,0xFF13F0,"Rush", "Rush");
 
 // competition_initaialize is the same as pre_auton.
 void competition_initialize() {
     //Initalize Buttons
-    auton_type.enabled(1);
     color_type.enabled(1);
+    full_auton.enabled(1);
+    mogo_auton.enabled(1);
     skills_tst.enabled(1);
-    pneu_tests.enabled(1);
+    rush_auton.enabled(1);
     pros::screen_touch_status_s_t status;
     int x;
     int y;
@@ -56,10 +58,11 @@ void competition_initialize() {
             //If screen is pressed and not locked
             x = status.x; //Get x value
             y = status.y; //Get y value
-            auton_type.poll(x,y);
             color_type.poll(x,y);
+            full_auton.poll(x,y);
+            mogo_auton.poll(x,y);
             skills_tst.poll(x,y);
-            pneu_tests.poll(x,y);
+            rush_auton.poll(x,y);
             wait=true; //Lock input
         }
         else if (status.touch_status!=TOUCH_RELEASED){
@@ -68,19 +71,27 @@ void competition_initialize() {
 
         //Set Variables
         //This just sets variables for auton
-        if (skills_tst.toggled()==1){
+        if (skills_tst.toggled()){
+            auton_value = 4;
+        }
+        else if (full_auton.toggled()){
+            auton_value = 1;
+        }
+        else if (mogo_auton.toggled()){
+            auton_value = 2;
+        }
+        else if (rush_auton.toggled()){
             auton_value = 3;
         }
-        else {
-            auton_value = auton_type.toggled();
-        }
 
+        
         if (color_type.toggled()==1){
             color_value = -1;
         }
         else{
             color_value = 1;
         }
+        
         pros::Task::delay(1); //Delay before repeat
 
         //if (pneu_tests.toggled() == true){
@@ -102,16 +113,17 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-    auton_type.enabled(0);
     color_type.enabled(0);
-    pneu_tests.enabled(0);
+    full_auton.enabled(0);
+    mogo_auton.enabled(0);
     skills_tst.enabled(0);
+    rush_auton.enabled(0);
     logo();
     //Select Auton
     //auton_value = 1;
     //color_value = 1;
-    if (auton_value==3){
-        mogo_auton(color_value);
+    if (auton_value==4{
+        skills_auton();
     }
     else if (auton_value==0){
         ring_auton(-color_value);
