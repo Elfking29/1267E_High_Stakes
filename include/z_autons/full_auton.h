@@ -1,1 +1,0 @@
-void full_autons(int color_value);

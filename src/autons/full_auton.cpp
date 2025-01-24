@@ -1,13 +1,12 @@
 #include "main.h"
-/*
-void ring_auton(int color_value){
+void full_auto(){
     DrivePID drive(0.2,0,0.1,1,0,0.2);
     delay(100);
     drive.prepare(-11);
     while (!drive.is_finished()){
         drive.go();
     }
-    drive.prepare(90*color_value,1);
+    drive.prepare(90,1);
     while (!drive.is_finished()){
         drive.go();
     }
@@ -26,7 +25,7 @@ void ring_auton(int color_value){
         drive.go();
         //drive.timeout(1500);
     }
-    drive.prepare(140*color_value,1);
+    drive.prepare(140,1);
     while (!drive.is_finished()){
         drive.go();
     }
@@ -43,7 +42,7 @@ void ring_auton(int color_value){
     }   
     Clamp.toggle();
     delay(500);
-    drive.prepare(130*color_value,1);
+    drive.prepare(130,1);
     while (!drive.is_finished()){
         drive.go();
     }   
@@ -54,7 +53,7 @@ void ring_auton(int color_value){
         drive.go();
     }
     delay(3000);
-    drive.prepare(-25*color_value,1); //Adjust
+    drive.prepare(-25,1); //Adjust
     while(!drive.is_finished()){
         drive.go();
     }
@@ -65,24 +64,4 @@ void ring_auton(int color_value){
         drive.go();
     }   
     
-}
-*/
-void full_autons(int color_value){
-    DrivePID drive(0.2,0,0.1,1,0,0.2);
-    delay(100);
-    drive.prepare(-30);
-    while (!drive.is_finished()){
-        drive.go();
-    }
-    delay(500);
-    drive.prepare(-6);
-    while (!drive.is_finished()){
-        drive.go();
-        drive.timeout(3000);
-    }
-    Clamp.toggle();
-    delay(1000);
-    Intake.move(127);
-
-}
-    
+}  

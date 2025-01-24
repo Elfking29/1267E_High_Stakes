@@ -1,5 +1,5 @@
 #include "main.h"
-void skills_auton(){
+void skills_auto(){
     DrivePID drive(0.2,0,0.1,1,0,0.2);
     delay(100);
     drive.prepare(-30);

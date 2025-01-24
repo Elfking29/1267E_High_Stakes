@@ -130,15 +130,15 @@ void autonomous() {
     //auton_value = 1;
     //color_value = 1;
     if (auton_value==4){
-        skills_auton();
+        skills_auto();
     }
     else if (auton_value==1){
-        full_autons(color_value);
+        full_auto();
     }
     else if (auton_value==2){
-        rush_autons(color_value);
+        rush_auto();
     }
     else if (auton_value==3){
-        bonk_autons(color_value);
+        bonk_auto();
     }
 }

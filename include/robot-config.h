@@ -27,5 +27,5 @@ extern Optical Color;
 extern Rotation Rotaty;
 
 //Define global variables here
-extern double robot_angle;
+extern int color_value;
 
