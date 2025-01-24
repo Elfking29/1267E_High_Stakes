@@ -133,12 +133,12 @@ void autonomous() {
         skills_auton();
     }
     else if (auton_value==1){
-        full_auton(color_value);
+        full_autons(color_value);
     }
     else if (auton_value==2){
-        rush_auton(color_value);
+        rush_autons(color_value);
     }
     else if (auton_value==3){
-        bonk_auton(color_value);
+        bonk_autons(color_value);
     }
 }

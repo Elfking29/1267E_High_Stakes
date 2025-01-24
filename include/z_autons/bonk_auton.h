@@ -1,1 +1,1 @@
-void bonk_auton(int color_value);
+void bonk_autons(int color_value);

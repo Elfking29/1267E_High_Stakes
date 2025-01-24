@@ -67,7 +67,7 @@ void ring_auton(int color_value){
     
 }
 */
-void ring_auton(int color_value){
+void full_autons(int color_value){
     DrivePID drive(0.2,0,0.1,1,0,0.2);
     delay(100);
     drive.prepare(-30);

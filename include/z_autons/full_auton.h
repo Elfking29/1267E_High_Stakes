@@ -1,1 +1,1 @@
-void full_auton(int color_value);
+void full_autons(int color_value);
