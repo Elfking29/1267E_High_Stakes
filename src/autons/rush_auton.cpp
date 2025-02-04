@@ -1,18 +1,52 @@
 #include "main.h"
 void rush_auto(){
+    color_value=-1;
     DrivePID drive(0.2,0,0.1,1,0,0.2);
+    Colory.set_led_pwm(100); //R 10+-10 B 210+-10
     delay(100);
-    drive.prepare(-30);
+    drive.prepare(-12);
+    while (!drive.is_finished()){
+        drive.go();
+    }
+    delay(250);
+    drive.prepare(-42,1);
+    while (!drive.is_finished()){
+        drive.go();
+    }
+    delay(250);
+    drive.prepare(-10);
+    while (!drive.is_finished()){
+        drive.go();
+    }
+    delay(250);
+    drive.prepare(-4);
+    while (!drive.is_finished()){
+        drive.go();
+    }
+    Clamp.toggle();
+    Intake.move(127);
+    
+    delay(1500);
+    drive.prepare(-75,1);
+    while (!drive.is_finished()){
+        drive.go();
+    }
+    //Clamp.toggle();
+    delay(250);
+    drive.prepare(24);
+    while (!drive.is_finished()){
+        drive.go();
+    }
+    delay(3000);
+    drive.prepare(30,1);
     while (!drive.is_finished()){
         drive.go();
     }
     delay(500);
-    drive.prepare(-6);
+    Intake.brake();
+    drive.prepare(-40);
     while (!drive.is_finished()){
         drive.go();
-        drive.timeout(3000);
     }
-    Clamp.toggle();
-    delay(1000);
-    Intake.move(127);
+   
 }

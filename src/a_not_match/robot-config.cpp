@@ -28,11 +28,11 @@ Motor FL (15,v5::MotorGears::blue);
 //Intake Motor
 Motor Intake (-13,v5::MotorGears::green);
 //Dunker
-Motor Arm (-14,v5::MotorGears::red);
+Motor Arm (-12,v5::MotorGears::red);
 //Pneumatics
 pros::adi::Pneumatics Clamp ('h',false);
 pros::adi::Pneumatics Corner ('g',false);
 
 //Sensors
-Optical Color (6);
+Optical Colory (6);
 Rotation Rotaty (7);

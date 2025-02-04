@@ -23,7 +23,7 @@ extern Motor Arm;
 extern pros::adi::Pneumatics Clamp;
 extern pros::adi::Pneumatics Corner;
 //Sensors
-extern Optical Color;
+extern Optical Colory;
 extern Rotation Rotaty;
 
 //Define global variables here

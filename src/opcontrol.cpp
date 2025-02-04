@@ -22,7 +22,7 @@ void opcontrol() {
 	Con1.clear();
 	uint32_t sleep_time = millis();
 	int print_counter = 0;
-	Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
+	Arm.set_brake_mode(MOTOR_BRAKE_BRAKE);
 	Intake.set_brake_mode(MOTOR_BRAKE_COAST);
 	while (true) {
 		//Drivetrain Movement
@@ -63,6 +63,17 @@ void opcontrol() {
 		}
 		else {
 			Intake.brake();
+		}
+
+		//Arm
+		if (button_up){
+			Arm.move(127);
+		}
+		else if (button_down){
+			Arm.move(-127);
+		}
+		else{
+			Arm.brake();
 		}
 
 
