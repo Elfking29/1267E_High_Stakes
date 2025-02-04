@@ -1,18 +1,66 @@
 #include "main.h"
 void skills_auto(){
+    color_value=1;
     DrivePID drive(0.2,0,0.1,1,0,0.2);
+    Arm.set_encoder_units(MOTOR_ENCODER_DEGREES);
     delay(100);
-    drive.prepare(-30);
-    while (!drive.is_finished()){
+    Arm.move_absolute(100,600);
+    delay(500);
+    Arm.move_absolute(0,600);
+    drive.prepare(-10);
+    while(!drive.is_finished()){
         drive.go();
     }
-    delay(500);
-    drive.prepare(-6);
-    while (!drive.is_finished()){
+    delay(100);
+    drive.prepare(-90,1);
+    while(!drive.is_finished()){
         drive.go();
-        drive.timeout(3000);
+    }
+    delay(250);
+    drive.prepare(-12);
+    while(!drive.is_finished()){
+        drive.go();
     }
     Clamp.toggle();
-    Intake.move(127);
-
+    delay(250);
+    drive.prepare(-22,1);
+    while(!drive.is_finished()){
+        drive.go();
+    }    
+    delay(100);
+    drive.prepare(-40);
+    while(!drive.is_finished()){
+        drive.go();
+    }
+    Clamp.toggle();
+    delay(250);
+    drive.prepare(40);
+    while(!drive.is_finished()){
+        drive.go();
+    }
+    delay(100);
+    drive.prepare(-163,1);
+    while(!drive.is_finished()){
+        drive.go();
+    }   
+    delay(100);
+    drive.prepare(-26);
+    while(!drive.is_finished()){
+        drive.go();
+    }
+    delay(100);
+    drive.prepare(-6);
+    while(!drive.is_finished()){
+        drive.go();
+    }
+    drive.prepare(22,1);
+    while(!drive.is_finished()){
+        drive.go();
+    }  
+    delay(100);
+    drive.prepare(-40);
+    while(!drive.is_finished()){
+        drive.go();
+    }
+    Clamp.toggle();
 }
