@@ -25,6 +25,7 @@ extern pros::adi::Pneumatics Corner;
 //Sensors
 extern Optical Colory;
 extern Rotation Rotaty;
+extern Rotation Armaty;
 
 //Define global variables here
 extern int color_value;

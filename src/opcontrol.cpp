@@ -22,7 +22,7 @@ void opcontrol() {
 	Con1.clear();
 	uint32_t sleep_time = millis();
 	int print_counter = 0;
-	Arm.set_brake_mode(MOTOR_BRAKE_BRAKE);
+	Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
 	Intake.set_brake_mode(MOTOR_BRAKE_COAST);
 	while (true) {
 		//Drivetrain Movement
@@ -66,6 +66,7 @@ void opcontrol() {
 		}
 
 		//Arm
+		//Locking position is #
 		if (button_up){
 			Arm.move(127);
 		}
@@ -99,7 +100,8 @@ void opcontrol() {
 
 		//Everything below is printing
 		if (print_counter%100 == 0){
-			Con1.print(0,0,"%i",pneu_use/2);
+			//Con1.print(0,0,"%i",pneu_use/2);
+			Con1.print(0,0,"%f",Armaty.get_position());
 		}
 		else if (print_counter%50 == 0){
 			Con1.clear();

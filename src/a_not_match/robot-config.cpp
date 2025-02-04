@@ -36,3 +36,4 @@ pros::adi::Pneumatics Corner ('g',false);
 //Sensors
 Optical Colory (6);
 Rotation Rotaty (7);
+Rotation Armaty (8);
