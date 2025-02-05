@@ -14,7 +14,6 @@
  */
 
 void opcontrol() {
-	skills_auto();
 	logo();
 	bool clamp_lock = false;
 	bool corner_lock = false;
@@ -23,9 +22,10 @@ void opcontrol() {
 	Con1.clear();
 	uint32_t sleep_time = millis();
 	int print_counter = 0;
-	Arm.set_brake_mode(MOTOR_BRAKE_HOLD);
+	Arm.set_brake_mode(MOTOR_BRAKE_BRAKE);
 	Arm.set_encoder_units(MOTOR_ENCODER_DEGREES);
 	Intake.set_brake_mode(MOTOR_BRAKE_COAST);
+	Hook.set_brake_mode(MOTOR_BRAKE_BRAKE);
 	while (true) {
 		//Drivetrain Movement
 		int left_x = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_LEFT_X),15); //Turn
@@ -59,12 +59,15 @@ void opcontrol() {
 		//Intake
 		if (button_r1){
 			Intake.move(127);
+			Hook.move(127);
 		}
 		else if (!button_r1 and button_left){
 			Intake.move(-127);
+			Hook.move(-127);
 		}
 		else {
 			Intake.brake();
+			Hook.brake();
 		}
 
 		//Arm
@@ -102,8 +105,8 @@ void opcontrol() {
 
 		//Everything below is printing
 		if (print_counter%100 == 0){
-			//Con1.print(0,0,"%i",pneu_use/2);
-			Con1.print(0,0,"%d",int(Arm.get_position()));
+			Con1.print(0,0,"%i",pneu_use/2);
+			//Con1.print(0,0,"%d",int(Arm.get_position()));
 		}
 		else if (print_counter%50 == 0){
 			Con1.clear();

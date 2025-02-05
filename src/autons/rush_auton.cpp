@@ -2,7 +2,7 @@
 void rush_auto(){
     color_value=-1;
     DrivePID drive(0.2,0,0.1,1,0,0.2);
-    Colory.set_led_pwm(100); //R 10+-10 B 210+-10
+     //R 10+-10 B 210+-10 for Colory
     delay(100);
     drive.prepare(-12);
     while (!drive.is_finished()){
@@ -25,6 +25,7 @@ void rush_auto(){
     }
     Clamp.toggle();
     Intake.move(127);
+    Hook.move(127);
     
     delay(1500);
     drive.prepare(-75,1);
@@ -44,6 +45,7 @@ void rush_auto(){
     }
     delay(500);
     Intake.brake();
+    Hook.brake();
     drive.prepare(-40);
     while (!drive.is_finished()){
         drive.go();

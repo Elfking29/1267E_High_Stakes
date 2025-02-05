@@ -26,9 +26,10 @@ Motor ML (-16,v5::MotorGears::blue);
 Motor FL (15,v5::MotorGears::blue);
 
 //Intake Motor
-Motor Intake (-13,v5::MotorGears::green);
+Motor Hook (13,v5::MotorGears::green);
+Motor Intake (-12,v5::MotorGears::green);
 //Dunker
-Motor Arm (-12,v5::MotorGears::red);
+Motor Arm (-11,v5::MotorGears::red);
 //Pneumatics
 pros::adi::Pneumatics Clamp ('h',false);
 pros::adi::Pneumatics Corner ('g',false);

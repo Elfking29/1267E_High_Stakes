@@ -16,6 +16,7 @@ extern Motor ML;
 extern Motor MR;
 
 //Intake
+extern Motor Hook;
 extern Motor Intake;
 //Dunker
 extern Motor Arm;
