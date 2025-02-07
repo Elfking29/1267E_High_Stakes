@@ -34,8 +34,8 @@ int color_value = 0;
 ScreenButton color_type(15,15,220,55,0xD22630,0x0077c8,"Red","Blue",0x000000,0x000000);
 ScreenButton auton_side(15,85,220,55,0xCFFF04,0xCFFF04,"Mogo","Ring",0x000000,0x000000);
 ScreenButton skills_tst(15,155,220,55,0xD29DF8,0xD29DF8,"Skills","Skills");
-ScreenButton full_auton(250,10,220,55,0x004e38,0x004e38,"Full","Full",0x000000,0xFFFFFF,1);
-ScreenButton rush_auton(250,85,220,55,0x004e38,0x004e38,"Rush","Rush");
+ScreenButton full_auton(250,10,220,55,0x004e38,0x004e38,"Full","Full");
+ScreenButton rush_auton(250,85,220,55,0x004e38,0x004e38,"Rush","Rush",0x000000,0xFFFFFF,1);
 ScreenButton bonk_auton(250,155,220,55,0x004e38,0x004e38,"Bonk", "Bonk");
 
 // competition_initaialize is the same as pre_auton.
@@ -89,10 +89,10 @@ void competition_initialize() {
 
         
         if (color_type.toggled()==1){
-            color_value = 1;
+            color_value = -1;
         }
         else{
-            color_value = -1;
+            color_value = 1;
         }
         
         pros::Task::delay(1); //Delay before repeat

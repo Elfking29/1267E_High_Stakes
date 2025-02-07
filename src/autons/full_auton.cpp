@@ -20,6 +20,5 @@ void full_auto(){
     while (!drive.is_finished()){
         drive.go();
     }
-    while (1==1){}
     
 }  

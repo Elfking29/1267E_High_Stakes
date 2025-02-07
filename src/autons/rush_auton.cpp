@@ -1,6 +1,5 @@
 #include "main.h"
 void rush_auto(){
-    color_value=-1;
     DrivePID drive(0.2,0,0.1,1,0,0.2);
      //R 10+-10 B 210+-10 for Colory
     delay(100);
@@ -19,7 +18,7 @@ void rush_auto(){
         drive.go();
     }
     delay(250);
-    drive.prepare(-4);
+    drive.prepare(-5);
     while (!drive.is_finished()){
         drive.go();
     }
@@ -39,7 +38,7 @@ void rush_auto(){
         drive.go();
     }
     delay(3000);
-    drive.prepare(30,1);
+    drive.prepare(40,1);
     while (!drive.is_finished()){
         drive.go();
     }
