@@ -3,11 +3,12 @@ void skills_auto(){
     color_value=1;
     DrivePID drive(0.2,0,0.1,1,0,0.2);
     Arm.set_encoder_units(MOTOR_ENCODER_DEGREES);
+    Hook.move_relative(-250,200);
     delay(100);
     Arm.move_absolute(500,600);
-    delay(2000);
+    delay(3000);
     Arm.move_absolute(0,600);
-    drive.prepare(-10);
+    drive.prepare(-12);
     while(!drive.is_finished()){
         drive.go();
     }
@@ -31,15 +32,17 @@ void skills_auto(){
     drive.prepare(-43);
     while(!drive.is_finished()){
         drive.go();
+
     }
     Clamp.toggle();
     delay(250);
     drive.prepare(40);
     while(!drive.is_finished()){
         drive.go();
+
     }
     delay(100);
-    drive.prepare(-163,1);
+    drive.prepare(-160,1);
     while(!drive.is_finished()){
         drive.go();
     }   
@@ -55,7 +58,7 @@ void skills_auto(){
     }
     Clamp.toggle();
     delay(250);
-    drive.prepare(22,1);
+    drive.prepare(20,1);
     while(!drive.is_finished()){
         drive.go();
     }  
