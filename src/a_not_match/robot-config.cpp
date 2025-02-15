@@ -26,7 +26,7 @@ Motor ML (-16,v5::MotorGears::blue);
 Motor FL (15,v5::MotorGears::blue);
 
 //Intake Motor
-Motor Hook (13,v5::MotorGears::green);
+Motor Hook (-13,v5::MotorGears::green);
 Motor Intake (-12,v5::MotorGears::green);
 //Dunker
 Motor Arm (-11,v5::MotorGears::red);

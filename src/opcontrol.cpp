@@ -17,6 +17,8 @@ void opcontrol() {
 	logo();
 	bool clamp_lock = false;
 	bool corner_lock = false;
+	bool arm_lock=false;
+	int arm_state = 0;
 	int pneu_use = 1;
 	SmartCon OPPrint(60);
 	Con1.clear();
@@ -71,14 +73,51 @@ void opcontrol() {
 		}
 
 		//Arm
-		//Locking position is #
-		if (button_up){
-			Arm.move(127);
+		/*
+		if (button_right and !arm_lock){
+			if (arm_state!=4){arm_state=4;}//Manual Control
+			else {arm_state=0;}//Auto
+			arm_lock=true;
 		}
-		else if (button_down){
-			Arm.move(-127);
+		else if (arm_state==4){
+			arm_lock=false;
+		}
+
+		//Manual Control
+		if (button_up){Arm.move(127);}
+		else if (button_down){Arm.move(-127);}
+		else {Arm.brake();}
+
+		//Auto Control
+		if (button_l2 and arm_state==0){
+			Arm.move_absolute(100,200); //Intake Level
+			arm_state=1;
+			arm_lock=true;
+		}
+		else if (button_l2 and arm_state==1 and arm_lock){}
+		else if (button_l2 and (arm_state==1 or arm_state==2)){
+			Arm.move_absolute(500,200); //Stake Level
+			arm_state=2;
+			arm_lock=true;
+		}
+		else if (button_l2 and arm_state==2 and arm_lock){}
+		else if (button_l2 and (arm_state==2 or arm_state==3)){
+			Arm.move_absolute(0,200); //Lowered
+			arm_state=3;
+			arm_lock=true;
 		}
 		else{
+			if (arm_state==3){arm_state=0;}
+			arm_lock=false;
+		}
+		*/
+		if (button_up){
+			Arm.move(64);
+		}
+		else if (button_down){
+			Arm.move(-64);
+		}
+		else {
 			Arm.brake();
 		}
 
@@ -93,27 +132,17 @@ void opcontrol() {
 			clamp_lock = false;
 		}
 
-		//Cornerer
-		if (button_l2 && !corner_lock){
-			Corner.toggle();
-			corner_lock=true;
-			}
-		else if (!button_l2 && corner_lock){
-			Corner.toggle();
-			corner_lock=false;
-		}
-
 		//Everything below is printing
 		if (print_counter%100 == 0){
-			Con1.print(0,0,"%i",pneu_use/2);
-			//Con1.print(0,0,"%d",int(Arm.get_position()));
+			//Con1.print(0,0,"%i,%i",pneu_use/2,int(ceil(arm_state/4)));
+			Con1.print(0,0,"%d",int(Arm.get_position()));
 		}
 		else if (print_counter%50 == 0){
 			Con1.clear();
 		}
-
 		print_counter += 1;
 		//End printing
+
 		pros::Task::delay_until(&sleep_time, 10);
 	}
 }
