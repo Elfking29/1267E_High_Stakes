@@ -1,7 +1,6 @@
 #include "main.h"
 void rush_auto(){
     DrivePID drive(0.2,0,0.1,1,0,0.2);
-    //R 10+-10 B 210+-10 for Colory
     Hook.move_relative(-250,200);
     Arm.move_relative(-100,200);
     delay(100);

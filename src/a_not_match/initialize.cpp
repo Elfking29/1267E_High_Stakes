@@ -116,6 +116,7 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
+    Colory.set_led_pwm(100);
     color_type.enabled(false);
     full_auton.enabled(false);
     rush_auton.enabled(false);
@@ -127,8 +128,6 @@ void autonomous() {
     }
     logo();
     //Select Auton
-    //auton_value = 1;
-    //color_value = 1;
     if (auton_value==4){
         skills_auto();
     }

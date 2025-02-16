@@ -16,8 +16,9 @@
 void opcontrol() {
 	logo();
 	bool clamp_lock = false;
-	bool corner_lock = false;
+	bool cornerer_lock = false;
 	bool arm_lock=false;
+	int sort_state;
 	int arm_state = 0;
 	int pneu_use = 1;
 	SmartCon OPPrint(60);
@@ -84,9 +85,11 @@ void opcontrol() {
 		}
 
 		//Manual Control
-		if (button_up){Arm.move(127);}
-		else if (button_down){Arm.move(-127);}
-		else {Arm.brake();}
+		if (arm_state==4){
+			if (button_up){Arm.move(127);}
+			else if (button_down){Arm.move(-127);}
+			else {Arm.brake();}
+		}
 
 		//Auto Control
 		if (button_l2 and arm_state==0){
@@ -111,6 +114,7 @@ void opcontrol() {
 			arm_lock=false;
 		}
 		*/
+
 		if (button_up){
 			Arm.move(64);
 		}
@@ -128,18 +132,49 @@ void opcontrol() {
 			clamp_lock = true;
 			pneu_use += 1;
 			}
-		else if (!button_l1){
-			clamp_lock = false;
+		else {clamp_lock = false;}
+
+		//Cornerer
+		if (button_x && !cornerer_lock){
+			Cornerer.toggle();
+			cornerer_lock = true;
+			pneu_use+=1;
+		}
+		else {cornerer_lock=false;}
+
+		//Sorter
+
+		//Manual Sort
+		//Complicated because only one variable used
+		if (button_b and sort_state<2){sort_state=2;}
+		else if (button_b and sort_state==2){}
+		else if (sort_state==2){sort_state=3;}
+		else if (sort_state==3){Sorter.retract();}
+		else if (button_b and sort_state==3){sort_state=1;}
+		else if (button_b and sort_state==1){}
+		else {sort_state=0;}
+
+		//Auto Sort
+		if (sort_state<2){
+			//Color 1=red, 1=blue
+			//R 10+-10 B 210+-10
 		}
 
-		//Everything below is printing
-		if (print_counter%100 == 0){
-			//Con1.print(0,0,"%i,%i",pneu_use/2,int(ceil(arm_state/4)));
-			Con1.print(0,0,"%d",int(Arm.get_position()));
+		//Printing
+		if (!print_counter%250){ //Line 0
+			Con1.print(0,0,"Pneu Use: %i", pneu_use/2);
 		}
-		else if (print_counter%50 == 0){
-			Con1.clear();
+		if (!print_counter%200){ //Line 1
+			Con1.print(1,0,"Arm Use: %s",arm_state==4?"Manual":"Auto");
 		}
+		if (!print_counter%150){ //Line 2
+			Con1.print(2,0,"Auto Sort: %s",sort_state<2?"On":"Off");
+		}
+		if (!print_counter%100){ //Line 3
+			Con1.print(3,0,"%d", int(Arm.get_position()));
+		}
+		else if (!print_counter%50){Con1.clear();} //Clear
+
 		print_counter += 1;
 		//End printing
 

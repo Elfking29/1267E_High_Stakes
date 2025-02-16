@@ -22,7 +22,8 @@ extern Motor Intake;
 extern Motor Arm;
 //Pneumatics
 extern pros::adi::Pneumatics Clamp;
-extern pros::adi::Pneumatics Corner;
+extern pros::adi::Pneumatics Cornerer;
+extern pros::adi::Pneumatics Sorter;
 //Sensors
 extern Optical Colory;
 extern Rotation Rotaty;
