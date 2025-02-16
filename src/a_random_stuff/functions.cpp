@@ -99,3 +99,8 @@ int get_sign(double value){
         return value/fabs(value);
     }
 }
+
+bool within(double number, double target, double range){
+    if (number<target+range and number>target-range){return true;}
+    else{return false;}
+}

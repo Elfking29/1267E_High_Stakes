@@ -21,10 +21,13 @@ void opcontrol() {
 	int sort_state;
 	int arm_state = 0;
 	int pneu_use = 1;
+	int extra_extend=0;
 	SmartCon OPPrint(60);
 	Con1.clear();
 	uint32_t sleep_time = millis();
 	int print_counter = 0;
+	int color_main=color_value==1?10:210; //Red,Blue
+	int color_alt=color_value==1?210:10; //Blue,Red
 	Arm.set_brake_mode(MOTOR_BRAKE_BRAKE);
 	Arm.set_encoder_units(MOTOR_ENCODER_DEGREES);
 	Intake.set_brake_mode(MOTOR_BRAKE_COAST);
@@ -156,8 +159,12 @@ void opcontrol() {
 
 		//Auto Sort
 		if (sort_state<2){
-			//Color 1=red, 1=blue
-			//R 10+-10 B 210+-10
+			if (within(Colory.get_hue(),color_alt,10)){
+				Sorter.extend();
+				extra_extend=0;
+			}
+			else if (Sorter.is_extended() and extra_extend<50){extra_extend+=1;} //Change 50 for another number later
+			else {Sorter.retract();}
 		}
 
 		//Printing
@@ -172,6 +179,7 @@ void opcontrol() {
 		}
 		if (!print_counter%100){ //Line 3
 			Con1.print(3,0,"%d", int(Arm.get_position()));
+			//Con1.print(3,0,"Main: %d Con: %d",)
 		}
 		else if (!print_counter%50){Con1.clear();} //Clear
 

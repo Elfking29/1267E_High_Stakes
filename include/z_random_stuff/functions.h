@@ -4,3 +4,4 @@ void brake_drive(int type = 0);
 int get_sign(double value);
 void print_screen(std::string str);
 void move_better_motors(float dl, float dr, float velocity, float delayt);
+bool within(double number, double target, double range);
