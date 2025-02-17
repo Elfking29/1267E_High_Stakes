@@ -34,6 +34,7 @@ Motor Arm (-11,v5::MotorGears::red);
 pros::adi::Pneumatics Clamp ('h',false);
 pros::adi::Pneumatics Cornerer ('g',false);
 pros::adi::Pneumatics Sorter ('f',false);
+pros::adi::Pneumatics Lift ('e',false);
 
 //Sensors
 Optical Colory (6);

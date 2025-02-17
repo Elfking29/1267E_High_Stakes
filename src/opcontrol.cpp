@@ -18,6 +18,7 @@ void opcontrol() {
 	bool clamp_lock = false;
 	bool cornerer_lock = false;
 	bool arm_lock=false;
+	bool lift_lock=false;
 	int sort_state;
 	int arm_state = 0;
 	int pneu_use = 1;
@@ -135,7 +136,7 @@ void opcontrol() {
 			clamp_lock = true;
 			pneu_use += 1;
 			}
-		else {clamp_lock = false;}
+		else if (!button_l1){clamp_lock = false;}
 
 		//Cornerer
 		if (button_x && !cornerer_lock){
@@ -143,7 +144,15 @@ void opcontrol() {
 			cornerer_lock = true;
 			pneu_use+=1;
 		}
-		else {cornerer_lock=false;}
+		else if (!button_x){cornerer_lock=false;}
+
+		//Intake Lift
+		if (button_a && !lift_lock){
+			Lift.toggle();
+			lift_lock = true;
+			pneu_use+=1;
+		}
+		else if (!button_a){lift_lock=false;}
 
 		//Sorter
 

@@ -24,6 +24,7 @@ extern Motor Arm;
 extern pros::adi::Pneumatics Clamp;
 extern pros::adi::Pneumatics Cornerer;
 extern pros::adi::Pneumatics Sorter;
+extern pros::adi::Pneumatics Lift;
 //Sensors
 extern Optical Colory;
 extern Rotation Rotaty;
