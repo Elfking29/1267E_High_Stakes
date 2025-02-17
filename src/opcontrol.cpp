@@ -19,7 +19,8 @@ void opcontrol() {
 	bool cornerer_lock = false;
 	bool arm_lock=false;
 	bool lift_lock=false;
-	int sort_state;
+	bool sort_lock=false;
+	bool sort_state=false;
 	int arm_state = 0;
 	int pneu_use = 1;
 	int extra_extend=0;
@@ -84,6 +85,7 @@ void opcontrol() {
 			else {arm_state=0;}//Auto
 			arm_lock=true;
 		}
+		else if (button_right){}
 		else if (arm_state==4){
 			arm_lock=false;
 		}
@@ -102,17 +104,18 @@ void opcontrol() {
 			arm_lock=true;
 		}
 		else if (button_l2 and arm_state==1 and arm_lock){}
-		else if (button_l2 and (arm_state==1 or arm_state==2)){
+		else if (button_l2 and (arm_state==1)){
 			Arm.move_absolute(500,200); //Stake Level
 			arm_state=2;
 			arm_lock=true;
 		}
 		else if (button_l2 and arm_state==2 and arm_lock){}
-		else if (button_l2 and (arm_state==2 or arm_state==3)){
+		else if (button_l2 and (arm_state==2)){
 			Arm.move_absolute(0,200); //Lowered
 			arm_state=3;
 			arm_lock=true;
 		}
+		else if (button_l2){}
 		else{
 			if (arm_state==3){arm_state=0;}
 			arm_lock=false;
@@ -156,24 +159,24 @@ void opcontrol() {
 
 		//Sorter
 
-		//Manual Sort
-		//Complicated because only one variable used
-		if (button_b and sort_state<2){sort_state=2;}
-		else if (button_b and sort_state==2){}
-		else if (sort_state==2){sort_state=3;}
-		else if (sort_state==3){Sorter.retract();}
-		else if (button_b and sort_state==3){sort_state=1;}
-		else if (button_b and sort_state==1){}
-		else {sort_state=0;}
+		//Off/On
+		if (button_b && !sort_lock){
+			sort_state=!sort_state;
+			sort_lock=true;
+		}
+		else if (!button_b){sort_lock=false;}
 
 		//Auto Sort
-		if (sort_state<2){
+		if (!sort_state){
 			if (within(Colory.get_hue(),color_alt,10)){
 				Sorter.extend();
 				extra_extend=0;
 			}
-			else if (Sorter.is_extended() and extra_extend<50){extra_extend+=1;} //Change 50 for another number later
+			else if (Sorter.is_extended() and extra_extend<=50){extra_extend+=1;} //Change 50 for another number later
 			else {Sorter.retract();}
+		}
+		else {
+			Sorter.retract();
 		}
 
 		//Printing
@@ -188,11 +191,11 @@ void opcontrol() {
 		}
 		if (!print_counter%100){ //Line 3
 			Con1.print(3,0,"%d", int(Arm.get_position()));
-			//Con1.print(3,0,"Main: %d Con: %d",)
+			//Con1.print(3,0,"Main: %d Con: %d",int(Con1.get_battery_level()),int(get_capacity))
 		}
 		else if (!print_counter%50){Con1.clear();} //Clear
 
-		print_counter += 1;
+		print_counter += 10;
 		//End printing
 
 		pros::Task::delay_until(&sleep_time, 10);
