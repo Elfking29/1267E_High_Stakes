@@ -236,8 +236,18 @@ bool DrivePID::is_finished(){
 }
 
 void DrivePID::timeout(int t){
-    if (this->time+this->st >= this->st+t){
-        this->finish = true;
+    if (t!=0){
+        if (this->time+this->st >= this->st+t){
+            this->finish = true;
+        }
+    }
+}
+
+void DrivePID::q_go(double distangle, bool turn, int t){
+    this->prepare(distangle,turn);
+    while (!this->is_finished()){
+        this->go();
+        this->timeout(t);
     }
 }
 

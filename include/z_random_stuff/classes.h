@@ -64,6 +64,7 @@ class DrivePID{
         void prepare(double distangle, bool turn=0, bool rev=0);
         void go();
         void timeout(int t);
+        void q_go(double distangle, bool turn=0, int t=0);
         //void turn(double angle, bool rev = 0);
 };
 
