@@ -21,6 +21,7 @@ void opcontrol() {
 	bool lift_lock=false;
 	bool sort_lock=false;
 	bool sort_state=false;
+	bool fun_bool=false;
 	int arm_state = 0;
 	int pneu_use = 1;
 	int extra_extend=0;
@@ -75,11 +76,10 @@ void opcontrol() {
 		}
 		else {
 			Intake.brake();
-			Hook.brake();
+			if (!fun_bool){Hook.brake();}
 		}
 
 		//Arm
-		/*
 		if (button_right and !arm_lock){
 			if (arm_state!=4){arm_state=4;}//Manual Control
 			else {arm_state=0;}//Auto
@@ -99,13 +99,15 @@ void opcontrol() {
 
 		//Auto Control
 		if (button_l2 and arm_state==0){
-			Arm.move_absolute(100,200); //Intake Level
+			Arm.move_absolute(95,200); //Intake Level
 			arm_state=1;
 			arm_lock=true;
 		}
 		else if (button_l2 and arm_state==1 and arm_lock){}
 		else if (button_l2 and (arm_state==1)){
-			Arm.move_absolute(500,200); //Stake Level
+			Hook.move_relative(-250,200);
+			fun_bool=true;
+			Arm.move_absolute(1225,200); //Stake Level
 			arm_state=2;
 			arm_lock=true;
 		}
@@ -119,17 +121,7 @@ void opcontrol() {
 		else{
 			if (arm_state==3){arm_state=0;}
 			arm_lock=false;
-		}
-		*/
-
-		if (button_up){
-			Arm.move(64);
-		}
-		else if (button_down){
-			Arm.move(-64);
-		}
-		else {
-			Arm.brake();
+			fun_bool=false;
 		}
 
 
@@ -180,20 +172,25 @@ void opcontrol() {
 		}
 
 		//Printing
-		if (!print_counter%250){ //Line 0
+		/*
+		if (!print_counter%250==0){ //Line 0
 			Con1.print(0,0,"Pneu Use: %i", pneu_use/2);
 		}
-		if (!print_counter%200){ //Line 1
+		if (!print_counter%200==0){ //Line 1
 			Con1.print(1,0,"Arm Use: %s",arm_state==4?"Manual":"Auto");
 		}
-		if (!print_counter%150){ //Line 2
+		if (!print_counter%150==0){ //Line 2
 			Con1.print(2,0,"Auto Sort: %s",sort_state<2?"On":"Off");
 		}
-		if (!print_counter%100){ //Line 3
+		if (print_counter%100==0){ //Line 3
 			Con1.print(3,0,"%d", int(Arm.get_position()));
 			//Con1.print(3,0,"Main: %d Con: %d",int(Con1.get_battery_level()),int(get_capacity))
 		}
-		else if (!print_counter%50){Con1.clear();} //Clear
+		else if (!print_counter%50==0){Con1.clear();} //Clear
+		*/
+	if (print_counter%50==0){
+		Con1.print(0,0,"%f", Arm.get_actual_velocity());
+	}
 
 		print_counter += 10;
 		//End printing
