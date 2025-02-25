@@ -70,7 +70,7 @@ void opcontrol() {
 			Intake.move(127);
 			Hook.move(127);
 		}
-		else if (!button_r1 and button_left){
+		else if (!button_r1 and button_r2){
 			Intake.move(-127);
 			Hook.move(-127);
 		}
@@ -80,24 +80,6 @@ void opcontrol() {
 		}
 
 		//Arm
-		if (button_right and !arm_lock){
-			if (arm_state!=4){arm_state=4;}//Manual Control
-			else {arm_state=0;}//Auto
-			arm_lock=true;
-		}
-		else if (button_right){}
-		else if (arm_state==4){
-			arm_lock=false;
-		}
-
-		//Manual Control
-		if (arm_state==4){
-			if (button_up){Arm.move(127);}
-			else if (button_down){Arm.move(-127);}
-			else {Arm.brake();}
-		}
-
-		//Auto Control
 		if (button_l2 and arm_state==0){
 			Arm.move_absolute(95,200); //Intake Level
 			arm_state=1;
@@ -124,6 +106,14 @@ void opcontrol() {
 			fun_bool=false;
 		}
 
+		//Manual Control
+		if (button_up or button_down or button_right){
+			arm_lock=true;
+			if (button_up){Arm.move(127);}
+			if (button_down){Arm.move(-127);}
+			if (button_right){arm_lock=false;}
+			else {Arm.brake();}
+		}
 
 		//Clamp
 		if (button_l1 && !clamp_lock){
@@ -142,12 +132,12 @@ void opcontrol() {
 		else if (!button_x){cornerer_lock=false;}
 
 		//Intake Lift
-		if (button_a && !lift_lock){
+		if (button_left && !lift_lock){
 			Lift.toggle();
 			lift_lock = true;
 			pneu_use+=1;
 		}
-		else if (!button_a){lift_lock=false;}
+		else if (!button_left){lift_lock=false;}
 
 		//Sorter
 
