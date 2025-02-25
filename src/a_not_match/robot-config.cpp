@@ -32,9 +32,9 @@ Motor Intake (-12,v5::MotorGears::green);
 Motor Arm (-11,v5::MotorGears::red);
 //Pneumatics
 pros::adi::Pneumatics Clamp ('h',false);
-pros::adi::Pneumatics Cornerer ('g',false);
-pros::adi::Pneumatics Sorter ('f',false);
-pros::adi::Pneumatics Lift ('e',false);
+pros::adi::Pneumatics Cornerer ('c',false);
+pros::adi::Pneumatics Sorter ('a',false);
+pros::adi::Pneumatics Lift ('g',false);
 
 //Sensors
 Optical Colory (6);

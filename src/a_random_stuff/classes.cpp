@@ -122,7 +122,8 @@ void DrivePID::prepare(double distangle, bool turn, bool rev){
     }
     else {
         //this->target = (2*6.5*distangle/3.25)*(60/36);
-        this->target = color_value*distangle*1900/315;
+        //this->target = color_value*distangle*1900/315;
+        this->target = color_value*distangle*2005/315;
         //This is a form of the arc length equation
         //See page 149 of notebook for details
     }

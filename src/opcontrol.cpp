@@ -142,6 +142,7 @@ void opcontrol() {
 		//Sorter
 
 		//Off/On
+		color_alt = 210;
 		if (button_b && !sort_lock){
 			sort_state=!sort_state;
 			sort_lock=true;
@@ -151,15 +152,15 @@ void opcontrol() {
 		//Auto Sort
 		if (!sort_state){
 			if (within(Colory.get_hue(),color_alt,10)){
-				Sorter.extend();
+				Hook.move(64);
+				fun_bool=true;
 				extra_extend=0;
 			}
-			else if (Sorter.is_extended() and extra_extend<=50){extra_extend+=1;} //Change 50 for another number later
-			else {Sorter.retract();}
+			else if (fun_bool and extra_extend<=5000){extra_extend+=1;} //Change 50 for another number later
+			else {fun_bool=false;}
 		}
-		else {
-			Sorter.retract();
-		}
+
+		if (button_b){rush_auto();}
 
 		//Printing
 		/*
