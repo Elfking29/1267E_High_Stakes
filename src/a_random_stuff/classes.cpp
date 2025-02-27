@@ -99,7 +99,6 @@ DrivePID::DrivePID(double kp_fb,double ki_fb,double kd_fb, double kp_tu,double k
     this->kd_tu = kd_tu;
 
     this->finish=false;
-    this->breakpoint=15;
     this->dt=dt;
 
     this->li=0;
@@ -110,8 +109,11 @@ DrivePID::DrivePID(double kp_fb,double ki_fb,double kd_fb, double kp_tu,double k
 }
 
 void DrivePID::prepare(double distangle, bool turn, bool rev){
+    imu.tare_rotation();
     this->turn=turn;
     this->finish = false;
+    this->breakpoint=!this->turn?30:2;
+    this->minimum=!this->turn?20:20;
     if (this->turn == false){
         this->target = (360*distangle*60)/(3.25*3.1416*36);
         //360 - Convert into revolutions
@@ -123,7 +125,7 @@ void DrivePID::prepare(double distangle, bool turn, bool rev){
     else {
         //this->target = (2*6.5*distangle/3.25)*(60/36);
         //this->target = color_value*distangle*1900/315;
-        this->target = color_value*distangle*2005/315;
+        this->target=distangle+imu.get_rotation();
         //This is a form of the arc length equation
         //See page 149 of notebook for details
     }
@@ -147,6 +149,8 @@ void DrivePID::prepare(double distangle, bool turn, bool rev){
 	FR.tare_position();
     MR.tare_position();
 	BR.tare_position();
+    delay(20);
+    pros::screen::print(TEXT_LARGE_CENTER, 1, "%f", target);
 
     //Set time
 	this->time = millis();
@@ -155,20 +159,23 @@ void DrivePID::prepare(double distangle, bool turn, bool rev){
 
 void DrivePID::go(){
 
-	this->l_encode = (FL.get_position()+ML.get_position()+BL.get_position())/3;
-	this->r_encode = (FR.get_position()+MR.get_position()+BR.get_position())/3;
-    if (this->turn==1){
-        this->r_encode = -this->r_encode;
+	if (!this->turn){
+        this->l_encode = (FL.get_position()+ML.get_position()+BL.get_position())/3;
+        this->r_encode = (FR.get_position()+MR.get_position()+BR.get_position())/3;
+
+        //This averages all three motors, which is more accurate
+
+        //Error for both sides
+        this->l_error = this->target-this->l_encode;
+        this->r_error = this->target-this->r_encode;
     }
-	//This averages all three motors, which is more accurate
-
-	//Error for both sides
-	this->l_error = this->target-this->l_encode;
-	this->r_error = this->target-this->r_encode;
-
-	//Proportional for both sides
-	this->lp = this->kp*this->l_error;
-	this->rp = this->kp*this->r_error;
+    else {
+        this->l_error=10*(this->target-imu.get_rotation());
+        this->r_error=-this->l_error;
+    }
+    //Proportional for both sides
+    this->lp = this->kp*this->l_error;
+    this->rp = this->kp*this->r_error;
 
 	//Integral for both sides
 	//Use the ternery operator to keep it compact
@@ -192,20 +199,32 @@ void DrivePID::go(){
         this->r_motor = this->rp+this->ri+this->rd;
     }
     else {
-        this->l_motor = (this->lp+this->li+this->ld+this->rp+this->ri+this->rd)/2;
+        this->l_motor = (this->lp+this->li+this->ld+fabs(this->rp+this->ri+this->rd))/2;
         this->r_motor = -this->l_motor;
     }
+    Con1.print(0,0,"%i,%i,%i",int(imu.get_rotation()),int(l_motor),int(l_error));
+
 
     //gaeb was here ;P
 
 	//Move motors
+    if (fabs(l_motor)<this->minimum and fabs(r_motor)<this->minimum){
+        l_motor=this->minimum;
+        r_motor=-this->minimum;
+    }
 	move_drive_motors(this->l_motor,this->r_motor);
 
-    Con1.print(0,0,"%i,%i",int(this->l_motor), int(this->r_motor));
+    //Con1.print(0,0,"%i,%i",int(this->l_motor), int(this->r_motor));
 
 	//Calculate whether loop should end
-	if (fabs(this->l_motor)<=this->breakpoint and fabs(this->r_motor)<=this->breakpoint){
-		this->finish = true;
+    if (!this->turn){
+        if (fabs(this->l_error)<=this->breakpoint and fabs(this->r_error)<=this->breakpoint){this->finish=true;}
+    }
+    else {
+        if (within(imu.get_rotation(),this->target,breakpoint)){this->finish=true;}
+    }
+
+	if (this->finish){
         FL.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
         BL.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 

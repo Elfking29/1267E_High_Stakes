@@ -33,6 +33,7 @@ class DrivePID{
         //General
         bool finish;
         double breakpoint;
+        double minimum;
         int dt;
         double target;
         bool turn;

@@ -28,6 +28,7 @@ extern pros::adi::Pneumatics Lift;
 //Sensors
 extern Optical Colory;
 extern Rotation Rotaty;
+extern Imu imu;
 extern Rotation Armaty;
 
 //Define global variables here

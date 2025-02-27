@@ -38,5 +38,6 @@ pros::adi::Pneumatics Lift ('g',false);
 
 //Sensors
 Optical Colory (6);
+Imu imu(14);
 Rotation Rotaty (7);
 Rotation Armaty (8);

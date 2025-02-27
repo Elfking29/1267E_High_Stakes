@@ -41,6 +41,7 @@ ScreenButton bonk_auton(250,155,220,55,0x004e38,0x004e38,"Bonk", "Bonk");
 // competition_initaialize is the same as pre_auton.
 void competition_initialize() {
     //Initalize Buttons
+    imu.reset(true);
     color_type.enabled(true);
     auton_side.enabled(true);
     skills_tst.enabled(true);

@@ -14,6 +14,7 @@
  */
 
 void opcontrol() {
+	imu.reset(true);
 	logo();
 	bool clamp_lock = false;
 	bool cornerer_lock = false;
@@ -159,8 +160,7 @@ void opcontrol() {
 			else if (fun_bool and extra_extend<=5000){extra_extend+=1;} //Change 50 for another number later
 			else {fun_bool=false;}
 		}
-
-		if (button_b){rush_auto();}
+		if (button_b){bonk_auto();}
 
 		//Printing
 		/*
@@ -180,7 +180,8 @@ void opcontrol() {
 		else if (!print_counter%50==0){Con1.clear();} //Clear
 		*/
 	if (print_counter%50==0){
-		Con1.print(0,0,"%f", Arm.get_actual_velocity());
+		//Con1.print(0,0,"%f", Arm.get_actual_velocity());
+		Con1.print(0,0,"%f",imu.get_rotation());
 	}
 
 		print_counter += 10;
