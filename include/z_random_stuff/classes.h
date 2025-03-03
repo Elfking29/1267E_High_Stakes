@@ -52,12 +52,17 @@ class DrivePID{
         double roe;
         double ld;
         double rd;
+        double l_add;
+        double r_add;
         double l_motor;
         double r_motor;
         double kp;
         double ki;
         double kd;
         int st;
+
+        void hmove(double distance);
+        void hturn(double angle);
 
     public:
         bool is_finished();
@@ -66,7 +71,6 @@ class DrivePID{
         void go();
         void timeout(int t);
         void q_go(double distangle, bool turn=0, int t=0);
-        //void turn(double angle, bool rev = 0);
 };
 
 //Smart Controller Printing

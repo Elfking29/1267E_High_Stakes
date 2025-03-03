@@ -14,7 +14,7 @@
  */
 
 void opcontrol() {
-	imu.reset(true);
+	Lift.extend();
 	logo();
 	bool clamp_lock = false;
 	bool cornerer_lock = false;
@@ -23,6 +23,7 @@ void opcontrol() {
 	bool sort_lock=false;
 	bool sort_state=false;
 	bool fun_bool=false;
+	bool a_lock=false;
 	int arm_state = 0;
 	int pneu_use = 1;
 	int extra_extend=0;
@@ -42,8 +43,8 @@ void opcontrol() {
 		int left_y = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_LEFT_Y),15); //Nothing
 		int right_x = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_RIGHT_X),15); //Nothing
 		int right_y = joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y),15); //FB
-		int Left_value = right_y+left_x;
-		int Right_value = right_y-left_x;
+		int Left_value = right_y+left_x +left_y;
+		int Right_value = right_y-left_x +left_y;
 		move_drive_motors(Left_value,Right_value);
 		//End Drivetrain
 
@@ -143,7 +144,6 @@ void opcontrol() {
 		//Sorter
 
 		//Off/On
-		color_alt = 210;
 		if (button_b && !sort_lock){
 			sort_state=!sort_state;
 			sort_lock=true;
@@ -153,14 +153,14 @@ void opcontrol() {
 		//Auto Sort
 		if (!sort_state){
 			if (within(Colory.get_hue(),color_alt,10)){
-				Hook.move(64);
-				fun_bool=true;
+				Sorter.extend();
 				extra_extend=0;
 			}
 			else if (fun_bool and extra_extend<=5000){extra_extend+=1;} //Change 50 for another number later
-			else {fun_bool=false;}
+			else {Sorter.retract();}
 		}
-		if (button_b){bonk_auto();}
+
+		if (button_b){rush_auto();}
 
 		//Printing
 		/*
@@ -181,7 +181,7 @@ void opcontrol() {
 		*/
 	if (print_counter%50==0){
 		//Con1.print(0,0,"%f", Arm.get_actual_velocity());
-		Con1.print(0,0,"%f",imu.get_rotation());
+		Con1.print(0,0,"%f",pneu_use);
 	}
 
 		print_counter += 10;

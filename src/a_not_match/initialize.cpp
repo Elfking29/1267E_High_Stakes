@@ -7,6 +7,9 @@
  */
 
 void initialize() {
+    Colory.set_led_pwm(100);
+    imu.reset(true);
+    color_value=1;
 }
 
 /**
@@ -41,7 +44,6 @@ ScreenButton bonk_auton(250,155,220,55,0x004e38,0x004e38,"Bonk", "Bonk");
 // competition_initaialize is the same as pre_auton.
 void competition_initialize() {
     //Initalize Buttons
-    imu.reset(true);
     color_type.enabled(true);
     auton_side.enabled(true);
     skills_tst.enabled(true);
@@ -117,7 +119,6 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-    Colory.set_led_pwm(100);
     color_type.enabled(false);
     full_auton.enabled(false);
     rush_auton.enabled(false);

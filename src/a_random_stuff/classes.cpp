@@ -112,8 +112,8 @@ void DrivePID::prepare(double distangle, bool turn, bool rev){
     imu.tare_rotation();
     this->turn=turn;
     this->finish = false;
-    this->breakpoint=!this->turn?30:2;
-    this->minimum=!this->turn?20:20;
+    this->breakpoint=!this->turn?30:5;
+    this->minimum=!this->turn?35:35;
     if (this->turn == false){
         this->target = (360*distangle*60)/(3.25*3.1416*36);
         //360 - Convert into revolutions
@@ -123,11 +123,7 @@ void DrivePID::prepare(double distangle, bool turn, bool rev){
         //gear ratio (motor/wheel)
     }
     else {
-        //this->target = (2*6.5*distangle/3.25)*(60/36);
-        //this->target = color_value*distangle*1900/315;
-        this->target=distangle+imu.get_rotation();
-        //This is a form of the arc length equation
-        //See page 149 of notebook for details
+        this->target=(distangle+imu.get_rotation())*color_value;
     }
     //Set correct k constants
     this->kp=this->turn==0?this->kp_fb:this->kp_tu;
@@ -150,106 +146,119 @@ void DrivePID::prepare(double distangle, bool turn, bool rev){
     MR.tare_position();
 	BR.tare_position();
     delay(20);
-    pros::screen::print(TEXT_LARGE_CENTER, 1, "%f", target);
+    pros::screen::print(TEXT_LARGE_CENTER, 1, "%f", imu.get_rotation());
+    pros::screen::print(TEXT_LARGE_CENTER, 3, "%f", target);
 
     //Set time
 	this->time = millis();
     this->st = this->time;
 }
 
-void DrivePID::go(){
-
-	if (!this->turn){
-        this->l_encode = (FL.get_position()+ML.get_position()+BL.get_position())/3;
-        this->r_encode = (FR.get_position()+MR.get_position()+BR.get_position())/3;
-
-        //This averages all three motors, which is more accurate
-
-        //Error for both sides
-        this->l_error = this->target-this->l_encode;
-        this->r_error = this->target-this->r_encode;
-    }
-    else {
-        this->l_error=10*(this->target-imu.get_rotation());
-        this->r_error=-this->l_error;
-    }
+void DrivePID::hmove(double distance){
+    this->l_encode = (FL.get_position()+ML.get_position()+BL.get_position())/3;
+    this->r_encode = (FR.get_position()+MR.get_position()+BR.get_position())/3;
+    //This averages all three motors, which is more accurate
+    //Error for both sides
+    this->l_error = this->target-this->l_encode;
+    this->r_error = this->target-this->r_encode;
     //Proportional for both sides
     this->lp = this->kp*this->l_error;
     this->rp = this->kp*this->r_error;
-
-	//Integral for both sides
-	//Use the ternery operator to keep it compact
-	//If error is 0, we want the integral at 0
-	//Also, if error > +-100, then it should be 0
+    //Integral for both sides
 	float arb_num = 100;
 	this->li = this->l_error>std::abs(arb_num)?0:this->l_error==0?0:this->ki*(this->li+this->dt*this->l_error);
 	this->ri = this->r_error>std::abs(arb_num)?0:this->r_error==0?0:this->ki*(this->ri+this->dt*this->r_error);
-
 	//Derivative for both sides
 	this->ld = this->kd*(this->l_error-this->loe)/this->dt;
 	this->rd = this->kd*(this->r_error-this->roe)/this->dt;
-
 	//Set previous error to error
 	this->loe = this->l_error;
 	this->roe = this->r_error;
-
-	//Motor values
-    if (this->turn == 0){
-        this->l_motor = this->lp+this->li+this->ld;
-        this->r_motor = this->rp+this->ri+this->rd;
+    //Motor stuff
+    this->l_add = this->lp+this->li+this->ld;
+    this->r_add = this->rp+this->ri+this->rd;
+    if (fabs(this->l_add)<=this->minimum and fabs(this->r_add)<=this->minimum and 1==0){
+        this->l_motor=30*get_sign(this->target);
+        this->r_motor=this->l_motor;
     }
-    else {
-        this->l_motor = (this->lp+this->li+this->ld+fabs(this->rp+this->ri+this->rd))/2;
-        this->r_motor = -this->l_motor;
+    else{
+        this->l_motor=this->l_add;
+        this->r_motor=this->r_add;
     }
-    Con1.print(0,0,"%i,%i,%i",int(imu.get_rotation()),int(l_motor),int(l_error));
-
-
-    //gaeb was here ;P
-
-	//Move motors
-    if (fabs(l_motor)<this->minimum and fabs(r_motor)<this->minimum){
-        l_motor=this->minimum;
-        r_motor=-this->minimum;
-    }
-	move_drive_motors(this->l_motor,this->r_motor);
-
-    //Con1.print(0,0,"%i,%i",int(this->l_motor), int(this->r_motor));
-
-	//Calculate whether loop should end
-    if (!this->turn){
-        if (fabs(this->l_error)<=this->breakpoint and fabs(this->r_error)<=this->breakpoint){this->finish=true;}
-    }
-    else {
-        if (within(imu.get_rotation(),this->target,breakpoint)){this->finish=true;}
-    }
-
-	if (this->finish){
+    move_drive_motors(this->l_motor,this->r_motor);
+    //Check if loop is done
+    if (within(this->l_error,0,this->breakpoint) and within(this->r_error,0,this->breakpoint)){this->finish=true;}
+    if (this->finish){
         FL.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
         BL.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-
         FR.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
         BR.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-
         ML.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
         MR.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-
+    
         FL.brake();
         BL.brake();
-
         FR.brake();
         BR.brake();
-
         ML.brake();
         MR.brake();
-	}
-
-
-    //Delay for 10 msec
+    }
+    //Delay for 10ms
+    Con1.print(0,0,"%f",imu.get_rotation());
     Task::delay_until(&this->time,this->dt);
+    }
+
+
+void DrivePID::hturn(double angle){  
+    //We only need one variable but I only have
+    //l & r variables. I'm using l in name only 
+    //Calculatons
+    this->l_error=10*(this->target-imu.get_rotation()); 
+    this->lp = this->kp*this->l_error;
+	float arb_num = 100;
+	this->li = this->l_error>std::abs(arb_num)?0:this->l_error==0?0:this->ki*(this->li+this->dt*this->l_error);
+	this->ld = this->kd*(this->l_error-this->loe)/this->dt;
+	this->loe = this->l_error;
+    //Motor Stuff
+    this->l_add = this->lp+this->li+this->ld;
+    if (fabs(this->l_add)<=this->minimum and fabs(this->r_add)<=this->minimum and 1==0){
+        this->l_motor=30*get_sign(this->target);
+        this->r_motor=-this->l_motor;
+    }
+    else{
+        this->l_motor=this->l_add;
+        this->r_motor=-this->l_add;
+    }
+    move_drive_motors(this->l_motor,this->r_motor);
+    //Check if loop is done
+    if (within(this->l_error,0,this->breakpoint)){this->finish=true;}
+    if (this->finish){
+        FL.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+        BL.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+        FR.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+        BR.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+        ML.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+        MR.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+    
+        FL.brake();
+        BL.brake();
+        FR.brake();
+        BR.brake();
+        ML.brake();
+        MR.brake();
+
+
+    //Delay for 10ms
+    Task::delay_until(&this->time,this->dt);
+
+    //Print stuff
+    }
 }
 
-
+void DrivePID::go(){
+    if (this->turn){this->hturn(this->target);}
+    else{this->hmove(this->target);}
+}
 
 bool DrivePID::is_finished(){
     return this->finish;
