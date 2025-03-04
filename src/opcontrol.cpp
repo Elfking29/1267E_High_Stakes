@@ -161,6 +161,8 @@ void opcontrol() {
 		}
 
 		if (button_b){rush_auto();}
+		if (button_a){bonk_auto();}
+
 
 		//Printing
 		/*

@@ -112,7 +112,7 @@ void DrivePID::prepare(double distangle, bool turn, bool rev){
     imu.tare_rotation();
     this->turn=turn;
     this->finish = false;
-    this->breakpoint=!this->turn?30:5;
+    this->breakpoint=!this->turn?30:2.5;
     this->minimum=!this->turn?35:35;
     if (this->turn == false){
         this->target = (360*distangle*60)/(3.25*3.1416*36);
