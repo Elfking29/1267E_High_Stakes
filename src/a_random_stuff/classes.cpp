@@ -151,7 +151,7 @@ void DrivePID::prepare(double distangle, bool turn, bool rev){
 
     //Set time
 	this->time = millis();
-    this->st = this->time;
+    this->t = 0;
 }
 
 void DrivePID::hmove(double distance){
@@ -264,11 +264,10 @@ bool DrivePID::is_finished(){
     return this->finish;
 }
 
-void DrivePID::timeout(int t){
-    if (t!=0){
-        if (this->time+this->st >= this->st+t){
-            this->finish = true;
-        }
+void DrivePID::timeout(int wait){
+    if (wait!=0){
+        this->t+=this->dt;
+        if (this->t>=wait){this->finish=true;}
     }
 }
 
