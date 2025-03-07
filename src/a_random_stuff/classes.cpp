@@ -189,12 +189,12 @@ void DrivePID::hmove(double distance){
     //Check if loop is done
     if (within(this->l_error,0,this->breakpoint) and within(this->r_error,0,this->breakpoint)){this->finish=true;}
     if (this->finish){
-        FL.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-        BL.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-        FR.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-        BR.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-        ML.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-        MR.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+        FL.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+        BL.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+        FR.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+        BR.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+        ML.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+        MR.set_brake_mode(E_MOTOR_BRAKE_HOLD);
     
         FL.brake();
         BL.brake();
@@ -233,12 +233,12 @@ void DrivePID::hturn(double angle){
     //Check if loop is done
     if (within(this->l_error,0,this->breakpoint)){this->finish=true;}
     if (this->finish){
-        FL.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-        BL.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-        FR.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-        BR.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-        ML.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-        MR.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+        FL.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+        BL.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+        FR.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+        BR.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+        ML.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+        MR.set_brake_mode(E_MOTOR_BRAKE_HOLD);
     
         FL.brake();
         BL.brake();

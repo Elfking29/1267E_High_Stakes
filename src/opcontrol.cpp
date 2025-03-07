@@ -156,7 +156,7 @@ void opcontrol() {
 				Sorter.extend();
 				extra_extend=0;
 			}
-			else if (fun_bool and extra_extend<=5000){extra_extend+=1;} //Change 50 for another number later
+			else if (extra_extend<=50){extra_extend+=1;} //Change 50 for another number later
 			else {Sorter.retract();}
 		}
 
