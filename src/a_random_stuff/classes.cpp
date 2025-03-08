@@ -106,6 +106,9 @@ DrivePID::DrivePID(double kp_fb,double ki_fb,double kd_fb, double kp_tu,double k
     this->loe=0;
     this->roe=0;
 
+    //R
+    this->s=0;
+    //R
 }
 
 void DrivePID::prepare(double distangle, bool turn, bool rev){
@@ -152,6 +155,10 @@ void DrivePID::prepare(double distangle, bool turn, bool rev){
     //Set time
 	this->time = millis();
     this->t = 0;
+
+    //R
+    this->settle=0;
+    //R
 }
 
 void DrivePID::hmove(double distance){
@@ -187,7 +194,13 @@ void DrivePID::hmove(double distance){
     }
     move_drive_motors(this->l_motor,this->r_motor);
     //Check if loop is done
-    if (within(this->l_error,0,this->breakpoint) and within(this->r_error,0,this->breakpoint)){this->finish=true;}
+    //R
+    //if (within(this->l_error,0,this->breakpoint) and within(this->r_error,0,this->breakpoint)){this->finish=true;}
+    if (within(this->l_error,0,this->breakpoint) and within(this->r_error,0,this->breakpoint)){
+        if (this->settle<this->s){this->settle+=1;}
+        else{this->finish=true;}
+    }
+    //R
     if (this->finish){
         FL.set_brake_mode(E_MOTOR_BRAKE_HOLD);
         BL.set_brake_mode(E_MOTOR_BRAKE_HOLD);
@@ -230,8 +243,14 @@ void DrivePID::hturn(double angle){
         this->r_motor=-this->l_add;
     }
     move_drive_motors(this->l_motor,this->r_motor);
-    //Check if loop is done
-    if (within(this->l_error,0,this->breakpoint)){this->finish=true;}
+    //Check if loop is done    
+    //R
+    //if (within(this->l_error,0,this->breakpoint) and within(this->r_error,0,this->breakpoint)){this->finish=true;}
+    if (within(this->l_error,0,this->breakpoint) and within(this->r_error,0,this->breakpoint)){
+        if (this->settle<this->s){this->settle+=1;}
+        else{this->finish=true;}
+    }
+    //R
     if (this->finish){
         FL.set_brake_mode(E_MOTOR_BRAKE_HOLD);
         BL.set_brake_mode(E_MOTOR_BRAKE_HOLD);

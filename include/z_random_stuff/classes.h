@@ -60,6 +60,10 @@ class DrivePID{
         double ki;
         double kd;
         int t;
+        //R
+        int settle;
+        int s;
+        //R
 
         void hmove(double distance);
         void hturn(double angle);
