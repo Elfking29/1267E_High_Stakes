@@ -12,6 +12,7 @@ code less messy.
 
 //Controller Definition
 Controller Con1 (CONTROLLER_MASTER); 
+Controller Con2 (CONTROLLER_PARTNER); 
 
 /* Motors:
 Port Number (Negative for reverse)

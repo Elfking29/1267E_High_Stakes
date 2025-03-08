@@ -4,6 +4,7 @@ using namespace pros;
 //many other teams using PROS use extern as well
 
 extern pros::Controller Con1;
+extern pros::Controller Con2;
 
 //Motors
 extern Motor FL;
