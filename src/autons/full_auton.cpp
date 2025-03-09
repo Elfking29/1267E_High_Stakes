@@ -1,6 +1,6 @@
 #include "main.h"
 void full_auto(){
-    color_value=1;
+    //color_value=1;
     DrivePID drive(0.2,0,0.1,1,0,0.2);
     Hook.move_relative(-250,200);
     Arm.move_relative(-100,200);

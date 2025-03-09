@@ -107,7 +107,7 @@ DrivePID::DrivePID(double kp_fb,double ki_fb,double kd_fb, double kp_tu,double k
     this->roe=0;
 
     //R
-    this->s=0;
+    this->s=5;
     //R
 }
 
@@ -149,8 +149,8 @@ void DrivePID::prepare(double distangle, bool turn, bool rev){
     MR.tare_position();
 	BR.tare_position();
     delay(20);
-    pros::screen::print(TEXT_LARGE_CENTER, 1, "%f", imu.get_rotation());
-    pros::screen::print(TEXT_LARGE_CENTER, 3, "%f", target);
+    //pros::screen::print(TEXT_LARGE_CENTER, 1, "%f", imu.get_rotation());
+    //pros::screen::print(TEXT_LARGE_CENTER, 3, "%f", target);
 
     //Set time
 	this->time = millis();
@@ -195,11 +195,14 @@ void DrivePID::hmove(double distance){
     move_drive_motors(this->l_motor,this->r_motor);
     //Check if loop is done
     //R
-    //if (within(this->l_error,0,this->breakpoint) and within(this->r_error,0,this->breakpoint)){this->finish=true;}
+    if (within(this->l_error,0,this->breakpoint) and within(this->r_error,0,this->breakpoint)){this->finish=true;}
+    /*
     if (within(this->l_error,0,this->breakpoint) and within(this->r_error,0,this->breakpoint)){
         if (this->settle<this->s){this->settle+=1;}
-        else{this->finish=true;}
+        else if (settle>=this->s){this->finish=true;}
+        else {settle=0;}
     }
+    */
     //R
     if (this->finish){
         FL.set_brake_mode(E_MOTOR_BRAKE_HOLD);
@@ -217,7 +220,6 @@ void DrivePID::hmove(double distance){
         MR.brake();
     }
     //Delay for 10ms
-    Con1.print(0,0,"%f",imu.get_rotation());
     Task::delay_until(&this->time,this->dt);
     }
 
@@ -245,11 +247,17 @@ void DrivePID::hturn(double angle){
     move_drive_motors(this->l_motor,this->r_motor);
     //Check if loop is done    
     //R
-    //if (within(this->l_error,0,this->breakpoint) and within(this->r_error,0,this->breakpoint)){this->finish=true;}
-    if (within(this->l_error,0,this->breakpoint) and within(this->r_error,0,this->breakpoint)){
-        if (this->settle<this->s){this->settle+=1;}
-        else{this->finish=true;}
+    //if (within(this->l_error,0,this->breakpoint)){this->finish=true;}
+    
+    if (within(this->l_error,0,this->breakpoint)){
+        pros::screen::print(TEXT_LARGE,5,"1");
+        if (this->settle<this->s+1){this->settle+=1;}
+        else if (settle>=this->s){this->finish=true;}
+        else {settle=0;pros::screen::print(TEXT_LARGE,5,"0");}
     }
+    pros::screen::print(TEXT_LARGE,0,"%i,%i,%f",this->settle,this->l_error);
+    
+
     //R
     if (this->finish){
         FL.set_brake_mode(E_MOTOR_BRAKE_HOLD);

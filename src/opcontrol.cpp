@@ -164,8 +164,8 @@ void opcontrol() {
 				else {Sorter.retract();}
 			}
 
-			//if (button_y){rush_auto();}
-			//if (button_a){bonk_auto();}
+			//if (button_y){bonk_auto();}
+			//if (button_a){rush_auto();}
 
 
 			//Printing
@@ -201,12 +201,13 @@ void opcontrol() {
 				use_partner=false;
 			}
 			Arm.move_absolute(1225,200);
-			int left_x = -joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_LEFT_X),15); //Turn
-			int left_y = -joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_LEFT_Y),15); //Nothing
-			int right_x = -joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_RIGHT_X),15); //Nothing
-			int right_y = -joystick_math(Con1.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y),15); //FB
-			int Left_value = left_y+left_x;
-			int Right_value = left_y-left_x;
+			Clamp.retract();
+			int left_x = joystick_math(Con2.get_analog(E_CONTROLLER_ANALOG_LEFT_X),15); //Turn
+			int left_y = joystick_math(Con2.get_analog(E_CONTROLLER_ANALOG_LEFT_Y),15); //Nothing
+			int right_x = joystick_math(Con2.get_analog(E_CONTROLLER_ANALOG_RIGHT_X),15); //Nothing
+			int right_y = joystick_math(Con2.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y),15); //FB
+			int Left_value = -left_y+left_x;
+			int Right_value = -left_y-left_x;
 			move_drive_motors(Left_value,Right_value);
 		}
 		pros::Task::delay_until(&sleep_time, 10);
